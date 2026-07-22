@@ -1,0 +1,15 @@
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 100dvh;
+  display: flex;
+  overflow: hidden;
+  background: var(--band);
+}
+
+.screen {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  animation: fadeIn 200ms ease;
+}

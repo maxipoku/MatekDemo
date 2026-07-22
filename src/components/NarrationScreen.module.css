@@ -1,0 +1,48 @@
+.narration {
+  position: relative;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  min-height: 96px;
+  pointer-events: none;
+}
+
+.continueButton {
+  pointer-events: auto;
+  padding: 14px 42px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accentText);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+  animation: fadeIn 200ms ease;
+}

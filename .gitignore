@@ -1,0 +1,9 @@
+node_modules
+dist
+.claude
+*.log
+.DS_Store
+Thumbs.db
+
+# Confidential working notes. Stays on this computer, never upload it.
+journal.md

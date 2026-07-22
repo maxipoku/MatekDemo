@@ -1,0 +1,60 @@
+:root {
+  --band: #0d1117;
+  --panel: rgba(15, 20, 28, 0.74);
+  --text: #f2f5f8;
+  --textDim: #ccd4de;
+  --accent: #ffd166;
+  --accentText: #1a1200;
+  --check: #2f6bb0;
+  --correctBg: #cdefd3;
+  --correctBorder: #2e7d32;
+  --correctText: #123018;
+  --incorrectBg: #ffe9a8;
+  --incorrectBorder: #d99a00;
+  --incorrectText: #3a2c00;
+  --inputBg: #ffffff;
+  --inputBorder: #9aa4b0;
+  --inputText: #10151c;
+  --focus: #7cc4ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--band);
+  color: var(--text);
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#root {
+  display: flex;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
