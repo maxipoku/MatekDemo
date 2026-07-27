@@ -13,6 +13,17 @@
   object-fit: contain;
 }
 
+/* A tall composition fills the width and is slid vertically (the pan). The
+   wrapper clips the overflow, so only the current window into the image shows. */
+.imagePan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+
 .controls {
   position: absolute;
   left: 0;

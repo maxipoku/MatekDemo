@@ -159,6 +159,7 @@ export function App() {
               canContinue={canContinue}
               isLast={isLast}
               devMode={devMode}
+              audioRef={narrationRef}
               onImageReady={handleNarrationImageReady}
               onContinue={goNext}
             />
