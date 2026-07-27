@@ -19,6 +19,9 @@ export function App() {
   const [index, setIndex] = useState(0)
   const [canContinue, setCanContinue] = useState(false)
   const [musicOn, setMusicOn] = useState(true)
+  // Developer mode: switched on from the cover screen. When on, extra buttons
+  // appear to skip a narration or to fill an exercise with the right answers.
+  const [devMode, setDevMode] = useState(false)
 
   const narrationRef = useRef<HTMLAudioElement | null>(null)
   const musicRef = useRef<HTMLAudioElement | null>(null)
@@ -139,7 +142,14 @@ export function App() {
         <MusicToggle on={musicOn} onToggle={() => setMusicOn((value) => !value)} />
       )}
 
-      {!started && <CoverScreen coverImage={story.coverImage} onStart={handleStart} />}
+      {!started && (
+        <CoverScreen
+          coverImage={story.coverImage}
+          onStart={handleStart}
+          devMode={devMode}
+          onToggleDevMode={() => setDevMode((value) => !value)}
+        />
+      )}
 
       {started && screen && (
         <div className={styles.screen} key={index}>
@@ -148,11 +158,17 @@ export function App() {
               screen={screen}
               canContinue={canContinue}
               isLast={isLast}
+              devMode={devMode}
               onImageReady={handleNarrationImageReady}
               onContinue={goNext}
             />
           ) : (
-            <ExerciseScreen screen={screen} isLast={isLast} onContinue={goNext} />
+            <ExerciseScreen
+              screen={screen}
+              isLast={isLast}
+              devMode={devMode}
+              onContinue={goNext}
+            />
           )}
         </div>
       )}

@@ -50,6 +50,29 @@ button {
   outline-offset: 2px;
 }
 
+/* Developer mode controls. Deliberately styled to look nothing like the child
+   facing UI (purple, dashed) and parked in a fixed corner. They only render
+   when developer mode is switched on from the cover screen. */
+.devButton {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 50;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  color: #ffffff;
+  background: #9333ea;
+  border: 2px dashed #e9d5ff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.devButton:hover {
+  filter: brightness(1.12);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

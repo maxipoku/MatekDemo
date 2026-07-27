@@ -8,13 +8,14 @@ import styles from "./ExerciseScreen.module.css"
 type Props = {
   screen: ExerciseScreenData
   isLast: boolean
+  devMode: boolean
   onContinue: () => void
 }
 
 type FieldStatus = "idle" | "correct" | "incorrect"
 type FieldState = { value: string; status: FieldStatus }
 
-export function ExerciseScreen({ screen, isLast, onContinue }: Props) {
+export function ExerciseScreen({ screen, isLast, devMode, onContinue }: Props) {
   const [bgFailed, setBgFailed] = useState(false)
 
   // One entry per field, keyed by the field id.
@@ -56,6 +57,20 @@ export function ExerciseScreen({ screen, isLast, onContinue }: Props) {
           if (current.status === "correct") continue
           const correct = checkAnswer(current.value, field.acceptedAnswers)
           next[field.id] = { value: current.value, status: correct ? "correct" : "incorrect" }
+        }
+      }
+      return next
+    })
+  }
+
+  // Developer mode only: put the first accepted answer into every box and mark
+  // them correct, so the screen completes and Tovabb appears.
+  const fillCorrect = () => {
+    setFieldStates(() => {
+      const next: Record<string, FieldState> = {}
+      for (const exercise of screen.exercises) {
+        for (const field of exercise.fields) {
+          next[field.id] = { value: field.acceptedAnswers[0] ?? "", status: "correct" }
         }
       }
       return next
@@ -169,6 +184,12 @@ export function ExerciseScreen({ screen, isLast, onContinue }: Props) {
           )}
         </div>
       </div>
+
+      {devMode && (
+        <button type="button" className="devButton" onClick={fillCorrect}>
+          Kitöltés
+        </button>
+      )}
     </div>
   )
 }

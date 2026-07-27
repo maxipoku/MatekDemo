@@ -7,11 +7,19 @@ type Props = {
   screen: NarrationScreenData
   canContinue: boolean
   isLast: boolean
+  devMode: boolean
   onImageReady: () => void
   onContinue: () => void
 }
 
-export function NarrationScreen({ screen, canContinue, isLast, onImageReady, onContinue }: Props) {
+export function NarrationScreen({
+  screen,
+  canContinue,
+  isLast,
+  devMode,
+  onImageReady,
+  onContinue,
+}: Props) {
   const [failed, setFailed] = useState(false)
 
   // If the picture is missing, still move to the sound step so nothing hangs.
@@ -42,6 +50,12 @@ export function NarrationScreen({ screen, canContinue, isLast, onImageReady, onC
             Tovább
           </button>
         </div>
+      )}
+
+      {devMode && !isLast && (
+        <button type="button" className="devButton" onClick={onContinue}>
+          Átugrás
+        </button>
       )}
     </div>
   )

@@ -5,9 +5,11 @@ import styles from "./CoverScreen.module.css"
 type Props = {
   coverImage: string
   onStart: () => void
+  devMode: boolean
+  onToggleDevMode: () => void
 }
 
-export function CoverScreen({ coverImage, onStart }: Props) {
+export function CoverScreen({ coverImage, onStart, devMode, onToggleDevMode }: Props) {
   const [failed, setFailed] = useState(false)
 
   return (
@@ -23,6 +25,14 @@ export function CoverScreen({ coverImage, onStart }: Props) {
       <div className={styles.overlay} />
       <button type="button" className={styles.startButton} onClick={onStart} autoFocus>
         Kezdés
+      </button>
+      <button
+        type="button"
+        className="devButton"
+        onClick={onToggleDevMode}
+        aria-pressed={devMode}
+      >
+        Fejlesztői mód: {devMode ? "be" : "ki"}
       </button>
     </div>
   )
