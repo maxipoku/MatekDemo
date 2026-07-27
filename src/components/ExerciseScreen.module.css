@@ -169,3 +169,15 @@
   visibility: visible;
   animation: fadeIn 200ms ease;
 }
+
+/* A single wide formula cannot wrap, so let it scroll inside its own line on a
+   narrow phone instead of being clipped or pushing the page sideways. */
+.intro,
+.prompt,
+.label,
+.hintItem {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-wrap: break-word;
+}
