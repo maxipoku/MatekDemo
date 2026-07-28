@@ -9,7 +9,7 @@ export const story: Story = {
       audio: "01.mp3",
       caption:
         "Sóhaj-öböl kikötője sosem alszik. Hajnalban is nyikorognak az árbocok, a sirályok a halászokkal veszekednek, a mólón pedig ott ül egy lány, aki a fél tengert kívülről ismeri, pedig még csak tizennégy éves. Vidrának hívják. Ő a Korallszív nevű hajó térképész tanonca, és még nem tudja, hogy ez a reggel mindent megváltoztat.",
-      captionTimings: [2.97, 16.9, 19.17, 29.36],
+      captionTimings: [2.86, 16.79, 19.04, 28.46],
     },
     {
       type: "narration",

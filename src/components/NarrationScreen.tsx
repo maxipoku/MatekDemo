@@ -60,8 +60,14 @@ export function NarrationScreen({
 
     const tick = () => {
       const audio = audioRef.current
-      const duration = audio && isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0
-      const time = audio ? audio.currentTime : 0
+      // Only trust the audio clock once the shared player is actually playing
+      // this screen's sound. Right after advancing it still holds the previous
+      // screen's finished position for a moment, so treat the time as 0 until it
+      // matches, otherwise the caption would flash in fully revealed.
+      const matches = Boolean(audio && audio.currentSrc && audio.currentSrc.includes(screen.audio))
+      const duration =
+        matches && audio && isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0
+      const time = matches && audio ? audio.currentTime : 0
       let progress = duration > 0 ? Math.min(time / duration, 1) : 0
       const noAudio = duration === 0 && performance.now() - startedAt > CAPTION_FALLBACK_MS
       if (noAudio) progress = 1
@@ -113,7 +119,7 @@ export function NarrationScreen({
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [portrait, audioRef, analysis, timings])
+  }, [portrait, audioRef, analysis, timings, screen.audio])
 
   const handleLoad = () => {
     const image = imgRef.current
