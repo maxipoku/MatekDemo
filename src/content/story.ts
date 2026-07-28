@@ -7,16 +7,25 @@ export const story: Story = {
       type: "narration",
       image: "01.webp",
       audio: "01.mp3",
+      caption:
+        "Sóhaj-öböl kikötője sosem alszik. Hajnalban is nyikorognak az árbocok, a sirályok a halászokkal veszekednek, a mólón pedig ott ül egy lány, aki a fél tengert kívülről ismeri, pedig még csak tizennégy éves. Vidrának hívják. Ő a Korallszív nevű hajó térképész tanonca, és még nem tudja, hogy ez a reggel mindent megváltoztat.",
+      captionTimings: [2.97, 16.9, 19.17, 29.36],
     },
     {
       type: "narration",
       image: "02.webp",
       audio: "02.mp3",
+      captionTimings: [5.92, 12.99, 20.2, 25.19],
+      caption:
+        "Vidra már a fogadóban ült, amikor Bors kapitány úgy lökte be az ajtót, mint egy viharfelhő. Rossz hírt hozott: Cirkalom mester, a Korallszív öreg navigátora nyomtalanul eltűnt. Csak egy lezárt ládát hagyott hátra, rajta üzenettel: aki kinyitja, azé a térképem. Az vezesse a hajót a Törtek tengerére, a Törtkirály kincséhez.",
     },
     {
       type: "narration",
       image: "03.webp",
       audio: "03.mp3",
+      captionTimings: [12.64, 20.83],
+      caption:
+        "A láda zárján három számtárcsa és egy tekerőkerék helyezkedett el, mellettük Cirkalom mester girbegurba kézírása sorolta, mire kell állítani őket. Pí, a Korallszív legbecsületesebb papagája, Vidra vállára röppent: „Rajtad a sor, tanonc!”",
     },
     {
       type: "exercise",
@@ -95,11 +104,17 @@ export const story: Story = {
       type: "narration",
       image: "04.webp",
       audio: "04.mp3",
+      captionTimings: [1.02, 2.22, 4.43, 15.11, 17.32, 33.54],
+      caption:
+        "Kilenc. Hatvan. Kilenc. A tárcsák sorra a helyükre kattantak, aztán Vidra háromszor teljesen körbetekerte a kereket, és ráadott még egy háromnegyed fordulatot. A zár engedett. A ládában ott feküdt a Törtek tengerének térképe, tele jelekkel és girbegurba vonalakkal, a sarkában Cirkalom kézjegyével és egy odavetett sorral: a Törtek tengere nem szereti a hívatlan vendégeket.",
     },
     {
       type: "narration",
       image: "05.webp",
       audio: "05.mp3",
+      captionTimings: [3.33, 11.85, 16.96, 22.86],
+      caption:
+        "A Korallszív fedélzetén kiterítették a térképet. Az első bejegyzés rögtön a kikötő zátonyairól szólt: aki teli vitorlával fut ki, azt az áramlat a sziklákra dobja. Cirkalom a margóra írta fel, hogyan kell beállítani a köteleket és a vitorlát. Bors kapitány Vidrára nézett: „Nos, tanonc, olvasd!”",
     },
     {
       type: "exercise",
@@ -179,11 +194,17 @@ export const story: Story = {
       type: "narration",
       image: "06.webp",
       audio: "06.mp3",
+      captionTimings: [13.94, 19.52, 23.09, 29.14],
+      caption:
+        "„Negyvenegy arasz az oromkötél, ötösre feszítsd a keresztkötelet, hatvan szem horgonyláncot ereszd, és háromötöd vitorlát bonts, egy arasszal se többet!”, kiáltotta Vidra a hajóorrból. A Korallszív lelassult, és kecsesen siklott át a fekete sziklák között. Az áramlat morogva engedte tovább őket. Pí a korláton billegett, és úgy tett, mintha egy pillanatig sem izgult volna.",
     },
     {
       type: "narration",
       image: "07.webp",
       audio: "07.mp3",
+      captionTimings: [8.01, 22.9, 27.31, 34.58],
+      caption:
+        "Két napig békésen futottak, aztán a láthatáron fehér fal emelkedett: a Suttogó-köd. A térkép széljegyzete szerint odabent harangbóják kongatnak, és a hajó csak úgy jut át, ha sorra elhalad a bóják mellett, számolja a kongásokat, és pontosan a megfelelő bójánál fordul északnak. Aki elvéti, azt a köd nem engedi el egykönnyen. Cirkalom mester a fordulót is elrejtette, hogy csak az követhesse a térképét, aki méltó rá.",
     },
     {
       type: "exercise",
@@ -265,11 +286,17 @@ export const story: Story = {
       type: "narration",
       image: "08.webp",
       audio: "08.mp3",
+      captionTimings: [1.09, 4.41, 8.7, 9.75, 10.99, 12.17, 14.17, 21.78, 24.3],
+      caption:
+        "Tizenhét. A tizenhetedik harangnál kell fordulni. A tejfehér semmiben csak a kongás számított. Tizenöt. Tizenhat. Tizenhét! Kormányt északnak! A Korallszív orra kifúrta magát a ködből, és a fedélzetre újra rásütött a nap. Pí diadalmasan rikkantott.",
     },
     {
       type: "narration",
       image: "09.webp",
       audio: "09.mp3",
+      captionTimings: [5.17, 18.57, 21.43, 25.1],
+      caption:
+        "A köd túloldalán sziklába vájt város bújt meg: Csempészzug. A kapuja fölött négy üres betűhely és egy vésett üzenet: idegen, fejtsd meg, mit érnek a betűk, add össze őket, és kiáltsd a kapunak az eredményt. Vidra elvigyorodott. Ez bizony Cirkalom mester keze munkája.",
     },
     {
       type: "exercise",
@@ -347,11 +374,17 @@ export const story: Story = {
       type: "narration",
       image: "10.webp",
       audio: "10.mp3",
+      captionTimings: [3.73, 10.65, 14.59, 21.58],
+      caption:
+        "„OKOS!”, kiáltotta Vidra teli torokból. A kapuőr elismerően füttyentett: „Negyven kilenced, mi? Rég járt erre olyan, aki ezt fejben kiszámolta.” A rácsok csikorogva felemelkedtek, és a Korallszív befuthatott a sziklák gyomrába.",
     },
     {
       type: "narration",
       image: "11.webp",
       audio: "11.mp3",
+      captionTimings: [9.7, 19.76, 27.42, 29.74],
+      caption:
+        "Csempészzug piacán mindent árultak: térképet, füstölt polipot, kétes eredetű álszakállat. Vidráéknak egyetlen dolog kellett: Kagylós Kelemen áramlat-térképe, ami átvezet a Törtek tengerének örvényei közt. „Az ára ezüstben annyi, amennyit ez a cédula mond”, vigyorgott a kagylónyakláncos kereskedő. „Egy garassal se kevesebb!”",
     },
     {
       type: "exercise",
@@ -430,11 +463,17 @@ export const story: Story = {
       type: "narration",
       image: "12.webp",
       audio: "12.mp3",
+      captionTimings: [6.15, 17.75, 19.68, 27.63, 29.96, 33.17],
+      caption:
+        "A negyvennyolc ezüst már Kelemen markában volt, az áramlat-térkép pedig Vidra táskájában. A kereskedő még utánuk kiáltott valamit hetvenkét szem kagylóról, de akkor már senki sem figyelt rá: a szirtek mögül sötét vitorla fordult utánuk. A Fekete Hínár! A kormánynál Cápafog Cézár állt, aki fél életében a Törtkirály kincsét kereste. Neki nem kellett térkép. Neki elég volt követni Vidráékat.",
     },
     {
       type: "narration",
       image: "13.webp",
       audio: "13.mp3",
+      captionTimings: [3.84, 10.56, 15.03, 17.29, 22.76, 27.3],
+      caption:
+        "A Fekete Hínár óráról órára közelebb ért. Előttük viszont feketére vált az ég: viharfal tornyosult a Törtek tengere fölé. „Oda épeszű hajós nem megy be”, morogta Bors kapitány. Vidra a naplót lapozta. Cirkalom mester járt már itt: viharban engedd le a viharhorgonyt! Már csak meg kell határozni, hány ölnyit eresszenek le.",
     },
     {
       type: "exercise",
@@ -513,11 +552,17 @@ export const story: Story = {
       type: "narration",
       image: "14.webp",
       audio: "14.mp3",
+      captionTimings: [6.71, 11.91, 18.97, 21.42],
+      caption:
+        "Negyven öl kötél futott ki a viharhorgonnyal, és a Korallszív orra engedelmesen a hullámoknak fordult. Az ég szakadt, a fedélzet nyikorgott, de a kötél tartott. Cápafog a vihar széléről nézte, ahogy elnyeli Vidráékat a sötétség, aztán káromkodva visszafordult. Ő ugyan nem megy utánuk.",
     },
     {
       type: "narration",
       image: "15.webp",
       audio: "15.mp3",
+      captionTimings: [3.15, 9.66, 11.73, 20.49],
+      caption:
+        "Hajnalra a vihar elfáradt. A Törtek tengere üvegsimán terült szét, a láthatáron pedig szigetek rajzolódtak ki. Egyik olyan, mint a másik. A térkép szerint a kincs szigetét kőoszlopok gyűrűje őrzi, és a napló pontosan megmondja, hányat kell számolni.",
     },
     {
       type: "exercise",
@@ -608,6 +653,9 @@ export const story: Story = {
       type: "narration",
       image: "16.webp",
       audio: "16.mp3",
+      captionTimings: [1.03, 6.33, 8.44, 13.79, 23.53, 28.03],
+      caption:
+        "Nyolc. Nyolc kőoszlop állt őrt a hullámokban a harmadik sziget körül. Partra szálltak. A parton egyetlen sziklatömb magasodott: a kettéhasadt Koponyakő. Az oldalába vésve újabb üzenet várta őket: a Koponyakő árnyékától lépj napnyugat felé. Hogy hányat, azt Cirkalom megint elrejtette.",
     },
     {
       type: "exercise",
@@ -686,11 +734,17 @@ export const story: Story = {
       type: "narration",
       image: "17.webp",
       audio: "17.mp3",
+      captionTimings: [2.12, 3.4, 4.53, 5.94, 7.03, 8.27, 13.34, 17.84, 21.31, 24.05],
+      caption:
+        "Öt lépés napnyugatnak. Egy. Kettő. Három. Négy. Öt. Vidra csizmája alatt tompán megkondult a föld. A homok alól kőlap került elő, alatta lépcső vezetett a mélybe. Pí egy teljes pillanatra elhallgatott. Nála ez a legnagyobb elismerés.",
     },
     {
       type: "narration",
       image: "18.webp",
       audio: "18.mp3",
+      captionTimings: [3.32, 8.07, 15.85, 22.44],
+      caption:
+        "A lépcső alján kőkapu állta útjukat. Közepén deltoid alakú véset, körülötte forgatható számtárcsa. A felirat rövid volt: fordíts annyit, amennyi a deltoid belső szögeinek összege. „Bemelegítésnek szánta”, mosolyodott el a lány, és a tárcsára tette a kezét.",
     },
     {
       type: "exercise",
@@ -769,11 +823,17 @@ export const story: Story = {
       type: "narration",
       image: "19.webp",
       audio: "19.mp3",
+      captionTimings: [1.28, 5.56, 14.86, 19.88],
+      caption:
+        "Háromszázhatvan. Teljes kör, ahogy egy deltoidhoz illik. A tárcsa kattant, a kőkapu dübörögve félrecsúszott, odabent pedig maguktól lobbantak fel a fáklyák. Mintha a barlang már nagyon régóta várt volna valakire.",
     },
     {
       type: "narration",
       image: "20.webp",
       audio: "20.mp3",
+      captionTimings: [4.04, 10.17, 14.45, 20.61, 24.93],
+      caption:
+        "A terem közepén két egyforma láda állt. A falon Cirkalom mester utolsó üzenete: az egyik láda csapda. Az igazi kinyílik, ha a helyes számra állítod a mutatót. És el ne felejtsd: a Törtek tengerén a nulla alatt is vannak számok. A mohó kalózok itt szoktak elbukni.",
     },
     {
       type: "exercise",
@@ -852,11 +912,17 @@ export const story: Story = {
       type: "narration",
       image: "21.webp",
       audio: "21.mp3",
+      captionTimings: [1.44, 4.71, 12.15, 22.25, 26.92],
+      caption:
+        "Mínusz egy. Egyetlen rovátkával a nulla alá. A legtöbb kalóz plusz egyre állítaná, és vihetné is a csapda jutalmát, egy láda ázott kétszersültet. Az igazi zár viszont halkan kattant, a fedél felnyílt, és ezerhat aranytallér fénye töltötte be a barlangot. Pí akkorát rikkantott, hogy a denevérek is felriadtak.",
     },
     {
       type: "narration",
       image: "22.webp",
       audio: "22.mp3",
+      captionTimings: [9.19, 11.42, 14.28, 21.11, 23.6],
+      caption:
+        "A tallérok tetején levél feküdt, Cirkalom mester írásával: ha ezt olvasod, jobb navigátor lettél, mint én valaha. A kincs a tiétek. Én már új vizeken járok. Vidra sokáig nézte a girbegurba betűket, aztán elmosolyodott, és zsebre tette a levelet. A Korallszív hazaindulhatott.",
     },
   ],
 }

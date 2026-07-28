@@ -14,7 +14,7 @@
 }
 
 /* A tall composition fills the width and is slid vertically (the pan). The
-   wrapper clips the overflow, so only the current window into the image shows. */
+   narration area clips the overflow, so only the current window into it shows. */
 .imagePan {
   position: absolute;
   top: 0;
@@ -22,6 +22,49 @@
   width: 100%;
   height: auto;
   will-change: transform;
+}
+
+/* The caption sits over the lower part of the picture on every screen size, on a
+   soft dark gradient so it stays readable without hiding much of the image. */
+.captionOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 33%;
+  min-height: 128px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(5, 8, 12, 0.82) 0%,
+    rgba(5, 8, 12, 0.55) 52%,
+    rgba(5, 8, 12, 0) 100%
+  );
+}
+
+.captionViewport {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.captionInner {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 22px clamp(20px, 5vw, 48px) 26px;
+  font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+  line-height: 1.55;
+  color: var(--text);
+  text-align: left;
+  will-change: transform;
+}
+
+/* Each word fades in as it is reached, so the caption is not shown all at once. */
+.word {
+  opacity: 0;
+  transition: opacity 350ms ease;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.85);
 }
 
 .controls {
@@ -34,6 +77,7 @@
   padding: 24px;
   min-height: 96px;
   pointer-events: none;
+  z-index: 4;
 }
 
 .continueButton {
@@ -46,7 +90,7 @@
   border: none;
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
 }
 
 .hidden {

@@ -1,0 +1,95 @@
+.timerButton {
+  position: fixed;
+  left: 12px;
+  bottom: 64px;
+  z-index: 50;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  color: #ffffff;
+  background: #7c3aed;
+  border: 2px dashed #ddd6fe;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.panel {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  width: min(90vw, 560px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+  background: rgba(22, 14, 40, 0.97);
+  border: 2px dashed #c4b5fd;
+  border-radius: 16px;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.6);
+}
+
+.counter {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ddd6fe;
+}
+
+.sentence {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  min-height: 3em;
+}
+
+.tapButton {
+  width: 100%;
+  padding: 20px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1200;
+  background: #ffd166;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #c4b5fd;
+}
+
+.doneTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.output {
+  width: 100%;
+  padding: 12px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.9rem;
+  color: #f4f6f8;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid #6d28d9;
+  border-radius: 10px;
+  resize: vertical;
+}
+
+.panelButton {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  color: #ffffff;
+  background: #7c3aed;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}

@@ -16,6 +16,8 @@ export type NarrationScreen = {
   type: "narration"
   image: string // file in public/assets/images
   audio: string // file in public/assets/audio
+  caption?: string // optional narrator text shown over the picture, revealed word by word
+  captionTimings?: number[] // optional start time (seconds) of each caption sentence, from the timing tool
 }
 
 // An exercise screen: one or more math tasks over a background picture.

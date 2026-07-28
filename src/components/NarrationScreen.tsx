@@ -1,8 +1,16 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import type { RefObject } from "react"
 import type { NarrationScreen as NarrationScreenData } from "../content/types"
 import { imageUrl } from "../lib/assets"
+import { analyzeCaption, revealedWordCount } from "../lib/sentences"
+import { CaptionTimer } from "./CaptionTimer"
 import styles from "./NarrationScreen.module.css"
+
+// If a narration sound is missing, reveal the whole caption after this pause so
+// it is never stuck hidden with no audio to pace it.
+const CAPTION_FALLBACK_MS = 2000
+// Keep a little breathing room below the newest revealed line.
+const CAPTION_BOTTOM_GAP = 10
 
 type Props = {
   screen: NarrationScreenData
@@ -28,40 +36,84 @@ export function NarrationScreen({
   const [portrait, setPortrait] = useState(false)
   const imgRef = useRef<HTMLImageElement | null>(null)
   const wrapRef = useRef<HTMLDivElement | null>(null)
+  const captionViewportRef = useRef<HTMLDivElement | null>(null)
+  const captionInnerRef = useRef<HTMLParagraphElement | null>(null)
+
+  const caption = screen.caption
+  const timings = screen.captionTimings
+  const analysis = useMemo(() => (caption ? analyzeCaption(caption) : null), [caption])
 
   // If the picture is missing, still move to the sound step so nothing hangs.
   useEffect(() => {
     if (failed) onImageReady()
   }, [failed, onImageReady])
 
-  // For a tall (portrait) composition, slide the picture from its top edge to
-  // its bottom edge in step with the narration audio, so it reaches the bottom
-  // exactly when the narration ends. A landscape picture never moves.
+  // One loop, paced to the narration audio: it slides a tall picture from top to
+  // bottom, and reveals the caption word by word (following recorded sentence
+  // times when present, otherwise spread evenly), keeping the newest words in view.
   useEffect(() => {
-    if (!portrait) return
-    const image = imgRef.current
-    const wrap = wrapRef.current
-    if (!image || !wrap) return
+    if (!portrait && !analysis) return
 
+    const startedAt = performance.now()
+    let lastRevealed = -1
     let frame = 0
+
     const tick = () => {
-      const overflow = image.offsetHeight - wrap.clientHeight
-      if (overflow > 0) {
-        const audio = audioRef.current
-        let progress = 0
-        if (audio && isFinite(audio.duration) && audio.duration > 0) {
-          progress = Math.min(audio.currentTime / audio.duration, 1)
+      const audio = audioRef.current
+      const duration = audio && isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0
+      const time = audio ? audio.currentTime : 0
+      let progress = duration > 0 ? Math.min(time / duration, 1) : 0
+      const noAudio = duration === 0 && performance.now() - startedAt > CAPTION_FALLBACK_MS
+      if (noAudio) progress = 1
+
+      if (portrait) {
+        const image = imgRef.current
+        const wrap = wrapRef.current
+        if (image && wrap) {
+          const overflow = image.offsetHeight - wrap.clientHeight
+          image.style.transform =
+            overflow > 0
+              ? `translateY(${-overflow * progress}px)`
+              : `translateY(${-overflow / 2}px)`
         }
-        image.style.transform = `translateY(${-overflow * progress}px)`
-      } else {
-        // Shorter than the screen: center it, with no motion.
-        image.style.transform = `translateY(${-overflow / 2}px)`
       }
+
+      const inner = captionInnerRef.current
+      const viewport = captionViewportRef.current
+      if (inner && viewport && analysis) {
+        const total = analysis.words.length
+        let revealed: number
+        if (timings && timings.length > 0 && duration > 0 && !noAudio) {
+          revealed = revealedWordCount(time, duration, timings, analysis)
+        } else {
+          revealed = Math.round(progress * total)
+        }
+        revealed = Math.min(total, Math.max(0, revealed))
+
+        const spans = inner.children
+        if (revealed !== lastRevealed) {
+          const from = Math.max(0, Math.min(revealed, lastRevealed))
+          const to = Math.max(revealed, lastRevealed)
+          for (let i = from; i < to; i++) {
+            ;(spans[i] as HTMLElement).style.opacity = i < revealed ? "1" : "0"
+          }
+          lastRevealed = revealed
+        }
+        if (revealed > 0 && spans[revealed - 1]) {
+          const last = spans[revealed - 1] as HTMLElement
+          const bottom = last.offsetTop + last.offsetHeight
+          const scroll = Math.max(0, bottom - viewport.clientHeight + CAPTION_BOTTOM_GAP)
+          inner.style.transform = `translateY(${-scroll}px)`
+        } else {
+          inner.style.transform = "translateY(0px)"
+        }
+      }
+
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [portrait, audioRef])
+  }, [portrait, audioRef, analysis, timings])
 
   const handleLoad = () => {
     const image = imgRef.current
@@ -84,6 +136,20 @@ export function NarrationScreen({
         />
       )}
 
+      {caption && analysis && (
+        <div className={styles.captionOverlay}>
+          <div className={styles.captionViewport} ref={captionViewportRef}>
+            <p className={styles.captionInner} ref={captionInnerRef}>
+              {analysis.words.map((word, index) => (
+                <span key={index} className={styles.word}>
+                  {index < analysis.words.length - 1 ? word + " " : word}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
+      )}
+
       {!isLast && (
         <div className={styles.controls}>
           <button
@@ -102,6 +168,8 @@ export function NarrationScreen({
           Átugrás
         </button>
       )}
+
+      {devMode && caption && <CaptionTimer caption={caption} audioRef={audioRef} />}
     </div>
   )
 }
