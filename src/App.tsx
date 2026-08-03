@@ -3,7 +3,7 @@ import { story } from "./content/story"
 import { CoverScreen } from "./components/CoverScreen"
 import { NarrationScreen } from "./components/NarrationScreen"
 import { ExerciseScreen } from "./components/ExerciseScreen"
-import { MusicToggle } from "./components/MusicToggle"
+import { MusicControls } from "./components/MusicControls"
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
 import styles from "./App.module.css"
@@ -19,6 +19,7 @@ export function App() {
   const [index, setIndex] = useState(0)
   const [canContinue, setCanContinue] = useState(false)
   const [musicOn, setMusicOn] = useState(true)
+  const [musicVolume, setMusicVolume] = useState(MUSIC_VOLUME)
   // Developer mode: switched on from the cover screen. When on, extra buttons
   // appear to skip a narration or to fill an exercise with the right answers.
   const [devMode, setDevMode] = useState(false)
@@ -133,13 +134,24 @@ export function App() {
     if (music) music.muted = !musicOn
   }, [musicOn])
 
+  // Keep the music volume in step with the slider.
+  useEffect(() => {
+    const music = musicRef.current
+    if (music) music.volume = musicVolume
+  }, [musicVolume])
+
   // Tidy up the pending timer if the app goes away.
   useEffect(() => clearRevealTimer, [clearRevealTimer])
 
   return (
     <div className={styles.stage}>
       {hasMusic && started && (
-        <MusicToggle on={musicOn} onToggle={() => setMusicOn((value) => !value)} />
+        <MusicControls
+          on={musicOn}
+          onToggle={() => setMusicOn((value) => !value)}
+          volume={musicVolume}
+          onVolumeChange={setMusicVolume}
+        />
       )}
 
       {!started && (

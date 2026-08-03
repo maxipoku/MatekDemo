@@ -2,6 +2,7 @@ import type { Story } from "./types"
 
 export const story: Story = {
   coverImage: "cover.webp",
+  backgroundMusic: "background_music.mp3",
   screens: [
     {
       type: "narration",
