@@ -73,7 +73,10 @@
   right: 0;
   bottom: 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  gap: 14px;
   padding: 24px;
   min-height: 96px;
   pointer-events: none;
@@ -91,6 +94,28 @@
   border-radius: 999px;
   cursor: pointer;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+}
+
+/* Replay the narration. A quieter, secondary look so Tovabb stays the main action. */
+.replayButton {
+  pointer-events: auto;
+  padding: 14px 26px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 480px) {
+  .replayButton,
+  .continueButton {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
 }
 
 .hidden {

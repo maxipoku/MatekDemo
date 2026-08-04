@@ -1,6 +1,6 @@
 .controls {
   position: fixed;
-  top: 14px;
+  top: 50px;
   right: 14px;
   z-index: 5;
   display: flex;

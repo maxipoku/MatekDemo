@@ -213,12 +213,6 @@ export function ExerciseScreen({
             </p>
           )}
 
-          {formatRule && (
-            <p className={styles.formatRule}>
-              <MathText text={formatRule} />
-            </p>
-          )}
-
           {tasks.length > 1 && (
             <div className={styles.progress} aria-hidden="true">
               {tasks.map((task, position) => {
@@ -256,6 +250,12 @@ export function ExerciseScreen({
             <p className={styles.prompt}>
               <MathText text={current.prompt} />
             </p>
+
+            {formatRule && (
+              <p className={styles.formatRule}>
+                <MathText text={formatRule} />
+              </p>
+            )}
 
             <div className={styles.fields}>
               {current.fields.map((field) => {

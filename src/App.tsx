@@ -5,12 +5,14 @@ import { NarrationScreen } from "./components/NarrationScreen"
 import { ExerciseScreen } from "./components/ExerciseScreen"
 import { MusicControls } from "./components/MusicControls"
 import { CoinTally } from "./components/CoinTally"
+import { ProgressBar } from "./components/ProgressBar"
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
 import styles from "./App.module.css"
 
-// How quiet the background music sits under the narration (0 to 1).
-const MUSIC_VOLUME = 0.18
+// The volume the background music starts at (0 to 1). Kept very low so it sits
+// under the narration; the corner slider can change it live.
+const MUSIC_VOLUME = 0.05
 // If a narration sound is missing or blocked, reveal Tovabb after this pause
 // so a missing file can never trap the child on a screen.
 const MISSING_AUDIO_REVEAL_MS = 1500
@@ -112,6 +114,18 @@ export function App() {
     if (expectingEndRef.current) scheduleReveal()
   }, [scheduleReveal])
 
+  // Replay the current narration from the start. canContinue is left alone (it
+  // stays true once the sound has finished once), so Tovabb remains on screen and
+  // the child can skip the replay at any moment.
+  const handleReplay = useCallback(() => {
+    const narration = narrationRef.current
+    if (!narration) return
+    expectingEndRef.current = true
+    narration.currentTime = 0
+    const played = narration.play()
+    if (played) played.catch(() => {})
+  }, [])
+
   const goNext = useCallback(() => {
     clearRevealTimer()
     expectingEndRef.current = false
@@ -161,6 +175,8 @@ export function App() {
 
   return (
     <div className={styles.stage}>
+      {started && <ProgressBar steps={screens.map((item) => item.type)} current={index} />}
+
       {hasMusic && started && (
         <MusicControls
           on={musicOn}
@@ -192,6 +208,7 @@ export function App() {
               audioRef={narrationRef}
               onImageReady={handleNarrationImageReady}
               onContinue={goNext}
+              onReplay={handleReplay}
             />
           ) : (
             <ExerciseScreen

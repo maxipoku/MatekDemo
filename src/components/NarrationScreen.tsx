@@ -20,6 +20,7 @@ type Props = {
   audioRef: RefObject<HTMLAudioElement | null>
   onImageReady: () => void
   onContinue: () => void
+  onReplay: () => void
 }
 
 export function NarrationScreen({
@@ -30,6 +31,7 @@ export function NarrationScreen({
   audioRef,
   onImageReady,
   onContinue,
+  onReplay,
 }: Props) {
   const [failed, setFailed] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -156,8 +158,16 @@ export function NarrationScreen({
         </div>
       )}
 
-      {!isLast && (
-        <div className={styles.controls}>
+      <div className={styles.controls}>
+        <button
+          type="button"
+          className={`${styles.replayButton} ${canContinue ? styles.visible : styles.hidden}`}
+          onClick={onReplay}
+          tabIndex={canContinue ? 0 : -1}
+        >
+          Történet újrajátszása
+        </button>
+        {!isLast && (
           <button
             type="button"
             className={`${styles.continueButton} ${canContinue ? styles.visible : styles.hidden}`}
@@ -166,8 +176,8 @@ export function NarrationScreen({
           >
             Tovább
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {devMode && !isLast && (
         <button type="button" className="devButton" onClick={onContinue}>

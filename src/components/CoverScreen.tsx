@@ -23,14 +23,19 @@ export function CoverScreen({ coverImage, onStart, devMode, onToggleDevMode }: P
         />
       )}
       <div className={styles.overlay} />
-      <button type="button" className={styles.startButton} onClick={onStart} autoFocus>
-        Kezdés
-      </button>
+      <div className={styles.hero}>
+        <h1 className={styles.title}>A Törtek Tengere</h1>
+        <button type="button" className={styles.startButton} onClick={onStart}>
+          Kezdés
+        </button>
+      </div>
       <button
         type="button"
-        className="devButton"
+        className={styles.devToggle}
         onClick={onToggleDevMode}
         aria-pressed={devMode}
+        aria-label="Fejlesztői mód"
+        tabIndex={-1}
       >
         Fejlesztői mód: {devMode ? "be" : "ki"}
       </button>

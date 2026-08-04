@@ -269,7 +269,7 @@ export const story: Story = {
         {
           id: "jel2",
           prompt:
-            "Ennél a harangbójánál fordulj északnak: az a kitevő, amelyre $7^9 \\cdot 7^8 = 7^B$.",
+            "Ennél a harangbójánál fordulj északnak: az a kitevő, amelyre $7^9 \\cdot 7^8 = 7^{Bója}$.",
           fields: [
             {
               id: "jel2mezo",
@@ -393,7 +393,7 @@ export const story: Story = {
       type: "exercise",
       backgroundImage: "wood.webp",
       introText:
-        "Kagylós Kelemen az áramlat-térképért ezüstöt kér, egy garassal se kevesebbet. A cédulájáról derül ki, mennyit.",
+        "Kagylós Kelemen az áramlat-térképért ezüstöt kér. A cédulájáról derül ki, mennyit.",
       exercises: [
         {
           id: "cedula1",
