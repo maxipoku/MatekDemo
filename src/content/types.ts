@@ -6,6 +6,7 @@
 export type Story = {
   coverImage: string // file in public/assets/images, shown behind the Kezdes button
   backgroundMusic?: string // optional file in public/assets/audio, loops across every screen
+  answerFormatRule?: string // optional note shown on every exercise about how to write answers
   screens: Screen[] // played in order, top to bottom
 }
 

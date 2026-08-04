@@ -3,6 +3,8 @@ import type { Story } from "./types"
 export const story: Story = {
   coverImage: "cover.webp",
   backgroundMusic: "background_music.mp3",
+  answerFormatRule:
+    "A törteket a legegyszerűbb alakban add meg pl.: 2/12 → 1/6! Végtelene tizedes törteket általános tört alakban add meg pl.: 0,66 → 1/3!",
   screens: [
     {
       type: "narration",
@@ -85,7 +87,7 @@ export const story: Story = {
         {
           id: "kerek",
           prompt:
-            "Eddig tekerd a kereket: $2 : \\frac{8}{15}$. Írd le a számolás menetét is!",
+            "Eddig tekerd a kereket: $2 : \\frac{8}{15}$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "kerekmezo",
@@ -175,7 +177,7 @@ export const story: Story = {
         {
           id: "vitorla",
           prompt:
-            "Ennyi vitorlát bonts ki: a $\\frac{3}{4}$ szám $\\frac{4}{5}$ része. Írd le a számolás menetét is!",
+            "Ennyi vitorlát bonts ki: a $\\frac{3}{4}$ szám $\\frac{4}{5}$ része. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "vitorlamezo",
@@ -216,7 +218,7 @@ export const story: Story = {
         {
           id: "jel1",
           prompt:
-            "Első jel: $\\frac{11}{9} - 2$. Írd le a számolás menetét is!",
+            "Első jel: $\\frac{11}{9} - 2$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "jel1mezo",
@@ -228,23 +230,6 @@ export const story: Story = {
             "Egy törtből vonsz ki egy egész számot.",
             "Írd fel a $2$-t is kilencedekben, hogy azonos nevezővel dolgozhass.",
             "Figyelj a végeredmény előjelére, mert a kivonandó nagyobb, mint amiből kivonod.",
-          ],
-        },
-        {
-          id: "jel2",
-          prompt:
-            "Ennél a harangbójánál fordulj északnak: az a kitevő, amelyre $7^9 \\cdot 7^8 = 7^B$.",
-          fields: [
-            {
-              id: "jel2mezo",
-              label: "A bója száma",
-              acceptedAnswers: ["17"],
-            },
-          ],
-          hints: [
-            "Azonos alapú hatványokat szorzol össze.",
-            "Ilyenkor az alap változatlan marad, és csak a kitevőkkel kell műveletet végezned.",
-            "A kitevőket összeadod, nem összeszorzod.",
           ],
         },
         {
@@ -279,6 +264,23 @@ export const story: Story = {
             "A kilenccel való oszthatóságnak van egy egyszerű szabálya.",
             "Egy szám akkor osztható kilenccel, ha a számjegyeinek összege is osztható kilenccel.",
             "Add össze az ismert számjegyeket, és nézd meg, mennyi hiányzik a legközelebbi kilenccel osztható számig.",
+          ],
+        },
+        {
+          id: "jel2",
+          prompt:
+            "Ennél a harangbójánál fordulj északnak: az a kitevő, amelyre $7^9 \\cdot 7^8 = 7^B$.",
+          fields: [
+            {
+              id: "jel2mezo",
+              label: "A bója száma",
+              acceptedAnswers: ["17"],
+            },
+          ],
+          hints: [
+            "Azonos alapú hatványokat szorzol össze.",
+            "Ilyenkor az alap változatlan marad, és csak a kitevőkkel kell műveletet végezned.",
+            "A kitevőket összeadod, nem összeszorzod.",
           ],
         },
       ],
@@ -355,7 +357,7 @@ export const story: Story = {
         },
         {
           id: "betuX",
-          prompt: "$X = O + K + O + S$. Írd le a számolás menetét is!",
+          prompt: "$X = O + K + O + S$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "betuXmezo",
@@ -426,6 +428,23 @@ export const story: Story = {
           ],
         },
         {
+          id: "cedula4",
+          prompt:
+            "A cédula utolsó sora: $\\frac{2}{3} - \\frac{2}{5}$. Írd le a számolás menetét a füzetedbe!",
+          fields: [
+            {
+              id: "cedula4mezo",
+              label: "Utolsó sor",
+              acceptedAnswers: ["4/15"],
+            },
+          ],
+          hints: [
+            "Különböző nevezőjű törteket vonsz ki egymásból.",
+            "Keress közös nevezőt a $3$-hoz és az $5$-höz.",
+            "Ha megvan a közös nevező, a számlálókat is át kell alakítanod, mielőtt kivonsz.",
+          ],
+        },
+        {
           id: "ezust",
           prompt: "Ennyi ezüstöt fizess: az árnak a kétharmada $32$.",
           fields: [
@@ -439,23 +458,6 @@ export const story: Story = {
             "Itt nem a kétharmadot kell kiszámolnod, hanem az egészet keresed.",
             "Ha a kétharmad rész ismert, előbb az egyharmadot érdemes meghatározni.",
             "Az egyharmad megvan, ha elfelezed a kétharmadot. Utána még egy lépés hiányzik az egészhez.",
-          ],
-        },
-        {
-          id: "cedula4",
-          prompt:
-            "A cédula utolsó sora: $\\frac{2}{3} - \\frac{2}{5}$. Írd le a számolás menetét is!",
-          fields: [
-            {
-              id: "cedula4mezo",
-              label: "Utolsó sor",
-              acceptedAnswers: ["4/15"],
-            },
-          ],
-          hints: [
-            "Különböző nevezőjű törteket vonsz ki egymásból.",
-            "Keress közös nevezőt a $3$-hoz és az $5$-höz.",
-            "Ha megvan a közös nevező, a számlálókat is át kell alakítanod, mielőtt kivonsz.",
           ],
         },
       ],
@@ -533,7 +535,7 @@ export const story: Story = {
         {
           id: "kotelhossz",
           prompt:
-            "Ennyi öl kötelet engedj ki: $\\text{árbócgyűrűk} - (\\text{lámpások} - \\text{mérőónok}) + \\text{árbócgyűrűk}$. Írd le a számolás menetét is!",
+            "Ennyi öl kötelet engedj ki: $\\text{árbócgyűrűk} - (\\text{lámpások} - \\text{mérőónok}) + \\text{árbócgyűrűk}$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "kotelhosszmezo",
@@ -571,23 +573,6 @@ export const story: Story = {
       introText:
         "A kincs szigetét kőoszlopok gyűrűje őrzi. Cirkalom naplója megmondja, hányat keress.",
       exercises: [
-        {
-          id: "kooszlop",
-          prompt:
-            "Ennyi kőoszlop veszi körül a szigetet: hány páratlan egész szám van $10$ és $26$ között?",
-          fields: [
-            {
-              id: "kooszlopmezo",
-              label: "Kőoszlopok száma",
-              acceptedAnswers: ["8"],
-            },
-          ],
-          hints: [
-            "Először tisztázd, melyik a legkisebb és melyik a legnagyobb páratlan szám a megadott határok között.",
-            "Írd fel őket sorban, kettesével lépkedve.",
-            "A $10$ és a $26$ maga nem tartozik bele, mert a feladat a köztük lévő számokat kéri.",
-          ],
-        },
         {
           id: "egyszerusites",
           prompt: "Egyszerűsítsd a következő törtet: $\\frac{9}{15}$",
@@ -634,7 +619,7 @@ export const story: Story = {
         {
           id: "osztas",
           prompt:
-            "Végezd el a következő osztást: $3\\frac{2}{3} : 5$. Írd le a számolás menetét is!",
+            "Végezd el a következő osztást: $3\\frac{2}{3} : 5$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "osztasmezo",
@@ -646,6 +631,23 @@ export const story: Story = {
             "Vegyes számmal dolgozol, ezt érdemes először átalakítani.",
             "Írd át a vegyes számot áltörtté, és csak utána oszd el az egész számmal.",
             "Osztani egy egész számmal ugyanaz, mint szorozni a reciprokával, tehát a nevező változik meg.",
+          ],
+        },
+        {
+          id: "kooszlop",
+          prompt:
+            "Ennyi kőoszlop veszi körül a szigetet: hány páratlan egész szám van $10$ és $26$ között?",
+          fields: [
+            {
+              id: "kooszlopmezo",
+              label: "Kőoszlopok száma",
+              acceptedAnswers: ["8"],
+            },
+          ],
+          hints: [
+            "Először tisztázd, melyik a legkisebb és melyik a legnagyobb páratlan szám a megadott határok között.",
+            "Írd fel őket sorban, kettesével lépkedve.",
+            "A $10$ és a $26$ maga nem tartozik bele, mert a feladat a köztük lévő számokat kéri.",
           ],
         },
       ],
@@ -715,7 +717,7 @@ export const story: Story = {
         {
           id: "lepes",
           prompt:
-            "Ennyi lépést tégy napnyugatnak: $b - 3a$, ahol $a = -\\frac{1}{3}$ és $b = 4$. Írd le a számolás menetét is!",
+            "Ennyi lépést tégy napnyugatnak: $b - 3a$, ahol $a = -\\frac{1}{3}$ és $b = 4$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "lepesmezo",
@@ -770,22 +772,6 @@ export const story: Story = {
           ],
         },
         {
-          id: "deltoid",
-          prompt: "Ennyit fordíts a tárcsán: a deltoid belső szögeinek összege.",
-          fields: [
-            {
-              id: "deltoidmezo",
-              label: "Fordulat fokban",
-              acceptedAnswers: ["360"],
-            },
-          ],
-          hints: [
-            "A deltoid egy négyszög, tehát a négyszögek tulajdonságai érvényesek rá.",
-            "Bármely négyszög felbontható két háromszögre egyetlen átlóval.",
-            "Egy háromszög belső szögeinek összege $180$ fok, és ebből következtethetsz a négyszögre.",
-          ],
-        },
-        {
           id: "hatvanyoszt",
           prompt: "Harmadik érték: $\\frac{2^6}{2^3}$",
           fields: [
@@ -804,7 +790,7 @@ export const story: Story = {
         {
           id: "vegyesmuvelet",
           prompt:
-            "Negyedik érték: $\\frac{3}{4} - \\frac{5}{7} : \\frac{15}{14}$. Írd le a számolás menetét is!",
+            "Negyedik érték: $\\frac{3}{4} - \\frac{5}{7} : \\frac{15}{14}$. Írd le a számolás menetét a füzetedbe!",
           fields: [
             {
               id: "vegyesmuveletmezo",
@@ -816,6 +802,22 @@ export const story: Story = {
             "Több művelet van egy kifejezésben, ezért a műveleti sorrend számít.",
             "Az osztás előbbre való, mint a kivonás, tehát azzal kezdd.",
             "A törttel való osztás után hozd közös nevezőre a két törtet, és csak utána vonj ki.",
+          ],
+        },
+        {
+          id: "deltoid",
+          prompt: "Ennyit fordíts a tárcsán: a deltoid belső szögeinek összege.",
+          fields: [
+            {
+              id: "deltoidmezo",
+              label: "Fordulat fokban",
+              acceptedAnswers: ["360"],
+            },
+          ],
+          hints: [
+            "A deltoid egy négyszög, tehát a négyszögek tulajdonságai érvényesek rá.",
+            "Bármely négyszög felbontható két háromszögre egyetlen átlóval.",
+            "Egy háromszög belső szögeinek összege $180$ fok, és ebből következtethetsz a négyszögre.",
           ],
         },
       ],

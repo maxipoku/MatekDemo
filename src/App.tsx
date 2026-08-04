@@ -4,6 +4,7 @@ import { CoverScreen } from "./components/CoverScreen"
 import { NarrationScreen } from "./components/NarrationScreen"
 import { ExerciseScreen } from "./components/ExerciseScreen"
 import { MusicControls } from "./components/MusicControls"
+import { CoinTally } from "./components/CoinTally"
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
 import styles from "./App.module.css"
@@ -23,6 +24,11 @@ export function App() {
   // Developer mode: switched on from the cover screen. When on, extra buttons
   // appear to skip a narration or to fill an exercise with the right answers.
   const [devMode, setDevMode] = useState(false)
+  // Treasure collected: one gold coin per correct answer, growing across the
+  // whole story. The award holds the latest gain so the tally can show a plus.
+  const [coins, setCoins] = useState(0)
+  // Bumps on every gain, used only to replay the coin pop on the tally.
+  const [award, setAward] = useState(0)
 
   const narrationRef = useRef<HTMLAudioElement | null>(null)
   const musicRef = useRef<HTMLAudioElement | null>(null)
@@ -77,6 +83,8 @@ export function App() {
     setStarted(true)
     setIndex(0)
     setCanContinue(false)
+    setCoins(0)
+    setAward(0)
   }, [])
 
   // Play the current narration sound once its picture has loaded.
@@ -112,6 +120,14 @@ export function App() {
     setCanContinue(false)
     setIndex((current) => Math.min(current + 1, screens.length - 1))
   }, [clearRevealTimer, screens.length])
+
+  // Award treasure when an answer is correct. Bumps the total and remembers the
+  // size of the gain (a two box task can give two) so the tally can show a plus.
+  const addCoins = useCallback((amount: number) => {
+    if (amount <= 0) return
+    setCoins((total) => total + amount)
+    setAward((previous) => previous + 1)
+  }, [])
 
   // Preload the next screen's picture and sound so the change feels instant.
   useEffect(() => {
@@ -154,6 +170,8 @@ export function App() {
         />
       )}
 
+      {started && coins > 0 && <CoinTally count={coins} awardId={award} />}
+
       {!started && (
         <CoverScreen
           coverImage={story.coverImage}
@@ -181,6 +199,8 @@ export function App() {
               isLast={isLast}
               devMode={devMode}
               onContinue={goNext}
+              onReward={addCoins}
+              formatRule={story.answerFormatRule}
             />
           )}
         </div>
