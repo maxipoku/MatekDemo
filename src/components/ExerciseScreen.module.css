@@ -19,40 +19,102 @@
   background: rgba(6, 9, 13, 0.62);
 }
 
+/* The stage for one task. It centers the card, and only as a last resort may it
+   scroll, but in normal use a single task always fits so nothing scrolls. */
 .content {
   position: relative;
   z-index: 1;
   flex: 1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  overflow-y: auto;
   width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 28px 22px 40px;
+  padding: 24px 20px;
 }
 
-.intro {
-  margin: 0;
-  font-size: 1.15rem;
-  color: var(--textDim);
-}
-
-.task {
-  background: var(--panel);
-  border-radius: 16px;
-  padding: 20px;
+.card {
+  margin: auto 0; /* center up and down, yet never clip when the content is tall */
+  width: 100%;
+  max-width: 620px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+.intro {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--textDim);
+  text-align: center;
+}
+
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.dotDone {
+  background: var(--accent);
+}
+
+.dotNow {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.28);
+}
+
+/* Answers already given, kept small so a later task that uses them still has the
+   numbers in view. */
+.solved {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 0.92rem;
+}
+
+.chipLabel {
+  color: var(--textDim);
+}
+
+.chipValue {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.task {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 200ms ease;
+}
+
 .prompt {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
   font-weight: 600;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .fields {
@@ -97,27 +159,6 @@
   color: var(--incorrectText);
 }
 
-.hints {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.hintList {
-  margin: 0;
-  padding-left: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--textDim);
-}
-
-.hintItem {
-  font-size: 1.05rem;
-  line-height: 1.5;
-}
-
 .hintButton {
   align-self: flex-start;
   padding: 9px 18px;
@@ -135,7 +176,7 @@
   flex-wrap: wrap;
   gap: 14px;
   align-items: center;
-  padding-top: 4px;
+  justify-content: center;
   min-height: 60px;
 }
 
@@ -170,6 +211,84 @@
   animation: fadeIn 200ms ease;
 }
 
+/* Hint popup. It floats over everything, so opening a hint never changes the
+   height of the task or makes the screen scroll. */
+.hintOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4, 7, 11, 0.66);
+  animation: fadeIn 150ms ease;
+}
+
+.hintCard {
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  background: #141a24;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hintTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.hintList {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text);
+}
+
+.hintItem {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.hintActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.hintNext {
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accentText);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.hintClose {
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
 /* A single wide formula cannot wrap, so let it scroll inside its own line on a
    narrow phone instead of being clipped or pushing the page sideways. */
 .intro,
@@ -180,4 +299,37 @@
   overflow-x: auto;
   overflow-y: hidden;
   overflow-wrap: break-word;
+}
+
+/* Short screens (a phone held sideways). Tighten the spacing and drop the scene
+   line so a single task still fits with no scrolling. */
+@media (max-height: 540px) {
+  .content {
+    padding: 12px 16px;
+  }
+  .card {
+    gap: 10px;
+  }
+  .intro {
+    display: none;
+  }
+  .task {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  .prompt {
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+  .input {
+    padding: 9px 12px;
+  }
+  .actions {
+    min-height: 0;
+  }
+  .checkButton,
+  .continueButton {
+    padding: 10px 24px;
+    font-size: 1.05rem;
+  }
 }
