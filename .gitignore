@@ -5,5 +5,10 @@ dist
 .DS_Store
 Thumbs.db
 
+# Local environment variables (Supabase keys etc). Never upload these.
+.env
+.env.*
+.vercel
+
 # Confidential working notes. Stays on this computer, never upload it.
 journal.md

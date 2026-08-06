@@ -13,3 +13,25 @@
   min-height: 0;
   animation: fadeIn 200ms ease;
 }
+
+/* A subtle feedback button in the top left, on every story screen. */
+.feedbackTab {
+  position: fixed;
+  top: 50px;
+  left: 14px;
+  z-index: 6;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.42);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.72;
+}
+
+.feedbackTab:hover {
+  opacity: 1;
+}

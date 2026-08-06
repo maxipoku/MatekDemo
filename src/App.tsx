@@ -6,6 +6,8 @@ import { ExerciseScreen } from "./components/ExerciseScreen"
 import { MusicControls } from "./components/MusicControls"
 import { CoinTally } from "./components/CoinTally"
 import { ProgressBar } from "./components/ProgressBar"
+import { EndingScreen } from "./components/EndingScreen"
+import { FeedbackScreen, type FeedbackSource } from "./components/FeedbackScreen"
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
 import styles from "./App.module.css"
@@ -31,6 +33,12 @@ export function App() {
   const [coins, setCoins] = useState(0)
   // Bumps on every gain, used only to replay the coin pop on the tally.
   const [award, setAward] = useState(0)
+  // The closing screen (Vege) after the last narration, and the feedback view it opens.
+  const [atEnding, setAtEnding] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
+  // Where the user was when they opened feedback, recorded so a submission can
+  // show how far they got.
+  const [feedbackSource, setFeedbackSource] = useState<FeedbackSource | null>(null)
 
   const narrationRef = useRef<HTMLAudioElement | null>(null)
   const musicRef = useRef<HTMLAudioElement | null>(null)
@@ -42,7 +50,6 @@ export function App() {
 
   const screens = story.screens
   const screen = screens[index]
-  const isLast = index === screens.length - 1
   const hasMusic = Boolean(story.backgroundMusic)
 
   const clearRevealTimer = useCallback(() => {
@@ -87,6 +94,9 @@ export function App() {
     setCanContinue(false)
     setCoins(0)
     setAward(0)
+    setAtEnding(false)
+    setShowFeedback(false)
+    setFeedbackSource(null)
   }, [])
 
   // Play the current narration sound once its picture has loaded.
@@ -132,8 +142,13 @@ export function App() {
     const narration = narrationRef.current
     if (narration) narration.pause()
     setCanContinue(false)
-    setIndex((current) => Math.min(current + 1, screens.length - 1))
-  }, [clearRevealTimer, screens.length])
+    // After the last screen comes the closing Vege screen.
+    if (index >= screens.length - 1) {
+      setAtEnding(true)
+    } else {
+      setIndex(index + 1)
+    }
+  }, [clearRevealTimer, index, screens.length])
 
   // Award treasure when an answer is correct. Bumps the total and remembers the
   // size of the gain (a two box task can give two) so the tally can show a plus.
@@ -142,6 +157,27 @@ export function App() {
     setCoins((total) => total + amount)
     setAward((previous) => previous + 1)
   }, [])
+
+  // Open feedback and record where the user was, so the submission can show how
+  // far they got. From the ending it records the end of the story.
+  const openFeedback = useCallback(() => {
+    // Stop the narration voice that is still playing on the current screen.
+    clearRevealTimer()
+    expectingEndRef.current = false
+    const narration = narrationRef.current
+    if (narration) narration.pause()
+    setFeedbackSource(
+      atEnding
+        ? { index: screens.length, position: screens.length, total: screens.length, type: "ending" }
+        : {
+            index,
+            position: index + 1,
+            total: screens.length,
+            type: screens[index]?.type ?? "narration",
+          },
+    )
+    setShowFeedback(true)
+  }, [atEnding, index, screens, clearRevealTimer])
 
   // Preload the next screen's picture and sound so the change feels instant.
   useEffect(() => {
@@ -175,7 +211,9 @@ export function App() {
 
   return (
     <div className={styles.stage}>
-      {started && <ProgressBar steps={screens.map((item) => item.type)} current={index} />}
+      {started && !atEnding && !showFeedback && (
+        <ProgressBar steps={screens.map((item) => item.type)} current={index} />
+      )}
 
       {hasMusic && started && (
         <MusicControls
@@ -186,7 +224,13 @@ export function App() {
         />
       )}
 
-      {started && coins > 0 && <CoinTally count={coins} awardId={award} />}
+      {started && coins > 0 && !showFeedback && <CoinTally count={coins} awardId={award} />}
+
+      {started && !atEnding && !showFeedback && (
+        <button type="button" className={styles.feedbackTab} onClick={openFeedback}>
+          Visszajelzés
+        </button>
+      )}
 
       {!started && (
         <CoverScreen
@@ -197,13 +241,13 @@ export function App() {
         />
       )}
 
-      {started && screen && (
+      {started && !atEnding && !showFeedback && screen && (
         <div className={styles.screen} key={index}>
           {screen.type === "narration" ? (
             <NarrationScreen
               screen={screen}
               canContinue={canContinue}
-              isLast={isLast}
+              isLast={false}
               devMode={devMode}
               audioRef={narrationRef}
               onImageReady={handleNarrationImageReady}
@@ -213,7 +257,7 @@ export function App() {
           ) : (
             <ExerciseScreen
               screen={screen}
-              isLast={isLast}
+              isLast={false}
               devMode={devMode}
               onContinue={goNext}
               onReward={addCoins}
@@ -221,6 +265,14 @@ export function App() {
             />
           )}
         </div>
+      )}
+
+      {started && atEnding && !showFeedback && (
+        <EndingScreen coverImage={story.coverImage} onFeedback={openFeedback} />
+      )}
+
+      {started && showFeedback && (
+        <FeedbackScreen source={feedbackSource} onBack={() => setShowFeedback(false)} />
       )}
 
       {/* Hidden sound elements, driven by the player. */}
