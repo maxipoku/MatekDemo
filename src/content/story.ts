@@ -38,7 +38,7 @@ export const story: Story = {
       exercises: [
         {
           id: "tarcsa1",
-          prompt: "Első tárcsa: egy szabályos hatszög átlóinak száma.",
+          prompt: "Első tárcsa: a $16; 9; 18; 3; 4$ számsokaság mediánja.",
           fields: [
             {
               id: "tarcsa1mezo",
@@ -47,9 +47,9 @@ export const story: Story = {
             },
           ],
           hints: [
-            "Az átló két olyan csúcsot köt össze, amelyek nem szomszédosak.",
-            "Rajzold le a hatszöget, és számold meg, hány átló indul egyetlen csúcsból. Utána gondolj arra, hogy hat csúcs van.",
-            "Ha csúcsonként összeszámolod az átlókat, minden átlót kétszer számoltál, mert két végpontja van.",
+            "A medián a középső érték, de csak akkor, ha már sorba rendezted a számokat.",
+            "Rendezd növekvő sorrendbe mind az öt számot.",
+            "Öt szám esetén a középső a harmadik a rendezett sorban, nem az, amelyik eredetileg középen állt.",
           ],
         },
         {
@@ -70,7 +70,7 @@ export const story: Story = {
         },
         {
           id: "tarcsa3",
-          prompt: "Harmadik tárcsa: a $16; 9; 18; 3; 4$ számsokaság mediánja.",
+          prompt: "Harmadik tárcsa: egy szabályos hatszög átlóinak száma.",
           fields: [
             {
               id: "tarcsa3mezo",
@@ -79,9 +79,9 @@ export const story: Story = {
             },
           ],
           hints: [
-            "A medián a középső érték, de csak akkor, ha már sorba rendezted a számokat.",
-            "Rendezd növekvő sorrendbe mind az öt számot.",
-            "Öt szám esetén a középső a harmadik a rendezett sorban, nem az, amelyik eredetileg középen állt.",
+            "Az átló két olyan csúcsot köt össze, amelyek nem szomszédosak.",
+            "Rajzold le a hatszöget, és számold meg, hány átló indul egyetlen csúcsból. Utána gondolj arra, hogy hat csúcs van.",
+            "Ha csúcsonként összeszámolod az átlókat, minden átlót kétszer számoltál, mert két végpontja van.",
           ],
         },
         {
