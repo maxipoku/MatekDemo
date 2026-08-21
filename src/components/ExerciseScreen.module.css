@@ -172,22 +172,9 @@
   font-weight: 700;
 }
 
-/* A wrong answer tints the box light red, which fades back to normal over a few
-   seconds. data-flash is set for the flash lifetime (see ExerciseScreen). */
-.input[data-flash="wrong"] {
-  animation: inputWrong 2600ms ease-out;
-}
-
-@keyframes inputWrong {
-  0% {
-    background: var(--wrongFlashBg);
-    border-color: var(--wrongFlashBorder);
-  }
-  100% {
-    background: var(--inputBg);
-    border-color: var(--inputBorder);
-  }
-}
+/* A wrong answer flashes the box light red and fades it back to normal. This is
+   animated imperatively in ExerciseScreen (Web Animations API) so a repeated
+   wrong answer can retrigger the flash every time. */
 
 /* The reward that floats up from the answer box when it turns correct. */
 .fieldGain {
@@ -224,12 +211,6 @@
 @media (prefers-reduced-motion: reduce) {
   .fieldGain {
     display: none;
-  }
-  /* No fade: show the wrong box as a steady light red for the flash lifetime. */
-  .input[data-flash="wrong"] {
-    animation: none;
-    background: var(--wrongFlashBg);
-    border-color: var(--wrongFlashBorder);
   }
 }
 

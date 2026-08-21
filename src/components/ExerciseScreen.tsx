@@ -39,9 +39,9 @@ export function ExerciseScreen({
   const [taskIndex, setTaskIndex] = useState(0)
   const [hintOpen, setHintOpen] = useState(false)
   // Floating "+1" markers shown at the answer fields, cleared shortly after.
-  const [flashes, setFlashes] = useState<
-    { key: number; fieldId: string; kind: "correct" | "wrong" }[]
-  >([])
+  // Correct answer +1 floats. A wrong answer is handled separately, by animating
+  // the box red imperatively (see checkCurrent), so it can retrigger every time.
+  const [flashes, setFlashes] = useState<{ key: number; fieldId: string }[]>([])
   const flashKeyRef = useRef(0)
   const flashTimersRef = useRef<number[]>([])
   // Scale the card down if it would be taller than the screen, so a busy
@@ -115,6 +115,42 @@ export function ExerciseScreen({
 
   // Check only the task on show. Correct fields turn green and lock. Others turn
   // yellow and stay editable. Nothing else happens, and no answer is revealed.
+  // Flash the given boxes light red, fading back to normal. Uses the Web
+  // Animations API on the element directly so each call restarts the flash,
+  // which lets a repeated wrong answer retrigger it every time.
+  const flashWrong = (fieldIds: string[]) => {
+    if (fieldIds.length === 0) return
+    const root = getComputedStyle(document.documentElement)
+    const redBg = root.getPropertyValue("--wrongFlashBg").trim() || "#ffd4d0"
+    const redBorder = root.getPropertyValue("--wrongFlashBorder").trim() || "#e0685e"
+    const normalBg = root.getPropertyValue("--inputBg").trim() || "#ffffff"
+    const normalBorder = root.getPropertyValue("--inputBorder").trim() || "#9aa4b0"
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    for (const id of fieldIds) {
+      const el = document.getElementById(id)
+      if (!el || typeof el.animate !== "function") continue
+      if (reduce) {
+        // No fade: hold a steady light red briefly, then it clears on its own.
+        el.animate(
+          [
+            { backgroundColor: redBg, borderColor: redBorder },
+            { backgroundColor: redBg, borderColor: redBorder },
+          ],
+          { duration: 1800 },
+        )
+      } else {
+        el.animate(
+          [
+            { backgroundColor: redBg, borderColor: redBorder, offset: 0 },
+            { backgroundColor: redBg, borderColor: redBorder, offset: 0.15 },
+            { backgroundColor: normalBg, borderColor: normalBorder, offset: 1 },
+          ],
+          { duration: 2600, easing: "ease-out" },
+        )
+      }
+    }
+  }
+
   const checkCurrent = () => {
     const checked: { fieldId: string; correct: boolean }[] = []
     const next: Record<string, FieldState> = { ...fieldStates }
@@ -132,20 +168,23 @@ export function ExerciseScreen({
     const gained = checked.filter((item) => item.correct).length
     if (gained > 0) onReward(gained)
 
-    // Mark each checked field: a gold plus floats up when correct, and a wrong
-    // answer tints the box light red (see renderInput). Both clear after the
-    // fade, a few seconds later.
-    const added = checked.map((item) => ({
-      key: (flashKeyRef.current += 1),
-      fieldId: item.fieldId,
-      kind: item.correct ? ("correct" as const) : ("wrong" as const),
-    }))
-    setFlashes((prev) => [...prev, ...added])
-    const addedKeys = new Set(added.map((item) => item.key))
-    const timer = window.setTimeout(() => {
-      setFlashes((prev) => prev.filter((item) => !addedKeys.has(item.key)))
-    }, 3000)
-    flashTimersRef.current.push(timer)
+    // A gold plus floats up from each newly correct box.
+    const added = checked
+      .filter((item) => item.correct)
+      .map((item) => ({ key: (flashKeyRef.current += 1), fieldId: item.fieldId }))
+    if (added.length > 0) {
+      setFlashes((prev) => [...prev, ...added])
+      const addedKeys = new Set(added.map((item) => item.key))
+      const timer = window.setTimeout(() => {
+        setFlashes((prev) => prev.filter((item) => !addedKeys.has(item.key)))
+      }, 2000)
+      flashTimersRef.current.push(timer)
+    }
+
+    // A wrong box flashes light red and fades back to normal. This is animated
+    // imperatively rather than through a class or attribute, so pressing
+    // Ellenorzes again on a still wrong answer restarts the flash every time.
+    flashWrong(checked.filter((item) => !item.correct).map((item) => item.fieldId))
   }
 
   // Tovabb: move to the next task, or leave the screen when the last task is done.
@@ -273,11 +312,6 @@ export function ExerciseScreen({
 
               const renderInput = (field: (typeof current.fields)[number]) => {
                 const state = fieldStates[field.id]
-                // A wrong check tints this box light red, which fades back to
-                // normal over a few seconds. No marker is drawn.
-                const wrong = flashes.some(
-                  (flash) => flash.fieldId === field.id && flash.kind === "wrong",
-                )
                 return (
                   <div className={styles.inputWrap}>
                     {/* The full keyboard, not the number keypad. A fraction answer needs a
@@ -292,7 +326,6 @@ export function ExerciseScreen({
                       value={state.value}
                       readOnly={state.status === "correct"}
                       data-state={state.status}
-                      data-flash={wrong ? "wrong" : undefined}
                       onChange={(event) => setValue(field.id, event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
@@ -302,7 +335,7 @@ export function ExerciseScreen({
                       }}
                     />
                     {flashes
-                      .filter((flash) => flash.fieldId === field.id && flash.kind === "correct")
+                      .filter((flash) => flash.fieldId === field.id)
                       .map((flash) => (
                         <span key={flash.key} className={styles.fieldGain} aria-hidden="true">
                           {coinMini}
