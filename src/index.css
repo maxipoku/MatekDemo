@@ -16,6 +16,10 @@
   --inputBorder: #9aa4b0;
   --inputText: #10151c;
   --focus: #7cc4ff;
+  /* Light red for a wrong answer: the box tints to this and fades back to white
+     over a few seconds. Replaces the old orange X marker. */
+  --wrongFlashBg: #ffd4d0;
+  --wrongFlashBorder: #e0685e;
 }
 
 * {

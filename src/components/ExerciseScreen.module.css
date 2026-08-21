@@ -172,8 +172,22 @@
   font-weight: 700;
 }
 
-/* A wrong answer no longer colours the box; it stays white and the orange X
-   marker below gives the feedback instead. */
+/* A wrong answer tints the box light red, which fades back to normal over a few
+   seconds. data-flash is set for the flash lifetime (see ExerciseScreen). */
+.input[data-flash="wrong"] {
+  animation: inputWrong 2600ms ease-out;
+}
+
+@keyframes inputWrong {
+  0% {
+    background: var(--wrongFlashBg);
+    border-color: var(--wrongFlashBorder);
+  }
+  100% {
+    background: var(--inputBg);
+    border-color: var(--inputBorder);
+  }
+}
 
 /* The reward that floats up from the answer box when it turns correct. */
 .fieldGain {
@@ -207,52 +221,15 @@
   }
 }
 
-/* The orange X that pops up next to a wrong answer, then fades within 2s. */
-.fieldMiss {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  margin-left: 10px;
-  transform: translateY(-50%);
-  font-size: 1.7rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #ff8c1a;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  animation: fieldMiss 1600ms ease forwards;
-}
-
-@keyframes fieldMiss {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.5);
-  }
-  15% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.2);
-  }
-  35% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50%) scale(1);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .fieldGain {
     display: none;
   }
-  /* Keep the X (it is the only wrong answer cue) but show it without motion. */
-  .fieldMiss {
+  /* No fade: show the wrong box as a steady light red for the flash lifetime. */
+  .input[data-flash="wrong"] {
     animation: none;
+    background: var(--wrongFlashBg);
+    border-color: var(--wrongFlashBorder);
   }
 }
 

@@ -132,8 +132,9 @@ export function ExerciseScreen({
     const gained = checked.filter((item) => item.correct).length
     if (gained > 0) onReward(gained)
 
-    // Flash a marker at each checked field: a gold plus when correct, an orange
-    // X when wrong. Both appear and fade within two seconds.
+    // Mark each checked field: a gold plus floats up when correct, and a wrong
+    // answer tints the box light red (see renderInput). Both clear after the
+    // fade, a few seconds later.
     const added = checked.map((item) => ({
       key: (flashKeyRef.current += 1),
       fieldId: item.fieldId,
@@ -143,7 +144,7 @@ export function ExerciseScreen({
     const addedKeys = new Set(added.map((item) => item.key))
     const timer = window.setTimeout(() => {
       setFlashes((prev) => prev.filter((item) => !addedKeys.has(item.key)))
-    }, 2000)
+    }, 3000)
     flashTimersRef.current.push(timer)
   }
 
@@ -272,6 +273,11 @@ export function ExerciseScreen({
 
               const renderInput = (field: (typeof current.fields)[number]) => {
                 const state = fieldStates[field.id]
+                // A wrong check tints this box light red, which fades back to
+                // normal over a few seconds. No marker is drawn.
+                const wrong = flashes.some(
+                  (flash) => flash.fieldId === field.id && flash.kind === "wrong",
+                )
                 return (
                   <div className={styles.inputWrap}>
                     {/* The full keyboard, not the number keypad. A fraction answer needs a
@@ -286,6 +292,7 @@ export function ExerciseScreen({
                       value={state.value}
                       readOnly={state.status === "correct"}
                       data-state={state.status}
+                      data-flash={wrong ? "wrong" : undefined}
                       onChange={(event) => setValue(field.id, event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
@@ -295,19 +302,13 @@ export function ExerciseScreen({
                       }}
                     />
                     {flashes
-                      .filter((flash) => flash.fieldId === field.id)
-                      .map((flash) =>
-                        flash.kind === "correct" ? (
-                          <span key={flash.key} className={styles.fieldGain} aria-hidden="true">
-                            {coinMini}
-                            <span>+1</span>
-                          </span>
-                        ) : (
-                          <span key={flash.key} className={styles.fieldMiss} aria-hidden="true">
-                            ✕
-                          </span>
-                        ),
-                      )}
+                      .filter((flash) => flash.fieldId === field.id && flash.kind === "correct")
+                      .map((flash) => (
+                        <span key={flash.key} className={styles.fieldGain} aria-hidden="true">
+                          {coinMini}
+                          <span>+1</span>
+                        </span>
+                      ))}
                   </div>
                 )
               }
