@@ -10,6 +10,7 @@ import { EndingScreen } from "./components/EndingScreen"
 import { FeedbackScreen, type FeedbackSource } from "./components/FeedbackScreen"
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
+import { createMusicPlayer, type MusicPlayer } from "./lib/musicLoop"
 import styles from "./App.module.css"
 
 // The volume the background music starts at (0 to 1). Kept very low so it sits
@@ -41,7 +42,9 @@ export function App() {
   const [feedbackSource, setFeedbackSource] = useState<FeedbackSource | null>(null)
 
   const narrationRef = useRef<HTMLAudioElement | null>(null)
-  const musicRef = useRef<HTMLAudioElement | null>(null)
+  // The background music. It crossfades its own end into its own beginning,
+  // see lib/musicLoop.ts for why a plain looping element is not enough.
+  const musicRef = useRef<MusicPlayer | null>(null)
   const revealTimerRef = useRef<number | undefined>(undefined)
   // True only while a real narration sound is playing. This keeps the silent
   // unlock sound (played once at the start) from being mistaken for a finished
@@ -81,12 +84,12 @@ export function App() {
       }
     }
 
-    const music = musicRef.current
-    if (music && story.backgroundMusic) {
-      music.src = audioUrl(story.backgroundMusic)
-      music.loop = true
-      music.volume = MUSIC_VOLUME
-      music.play().catch(() => {})
+    if (story.backgroundMusic) {
+      // Stop any earlier run first, so starting twice cannot stack two tracks.
+      musicRef.current?.stop()
+      const music = createMusicPlayer()
+      musicRef.current = music
+      music.start(audioUrl(story.backgroundMusic), MUSIC_VOLUME)
     }
 
     setStarted(true)
@@ -196,18 +199,19 @@ export function App() {
 
   // Keep the music muted or audible in step with the toggle.
   useEffect(() => {
-    const music = musicRef.current
-    if (music) music.muted = !musicOn
+    musicRef.current?.setMuted(!musicOn)
   }, [musicOn])
 
   // Keep the music volume in step with the slider.
   useEffect(() => {
-    const music = musicRef.current
-    if (music) music.volume = musicVolume
+    musicRef.current?.setVolume(musicVolume)
   }, [musicVolume])
 
   // Tidy up the pending timer if the app goes away.
   useEffect(() => clearRevealTimer, [clearRevealTimer])
+
+  // Release the audio hardware if the app goes away.
+  useEffect(() => () => musicRef.current?.stop(), [])
 
   return (
     <div className={styles.stage}>
@@ -277,7 +281,6 @@ export function App() {
 
       {/* Hidden sound elements, driven by the player. */}
       <audio ref={narrationRef} onEnded={handleAudioEnded} onError={handleAudioError} preload="auto" />
-      <audio ref={musicRef} preload="auto" />
     </div>
   )
 }
