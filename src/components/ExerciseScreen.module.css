@@ -268,6 +268,32 @@
   cursor: pointer;
 }
 
+.inputRow {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 60px;
+}
+
+/* The answer box in the middle. It grows to fill the row but never past its own
+   max width (260px), so on a laptop the box stays a sensible size with the two
+   buttons hugging it, and on a phone it shrinks to whatever the buttons leave. */
+.inputRow .inputWrap {
+  flex: 1 1 auto;
+}
+
+/* Tipp and the check button keep their size, so the box is what gives way when
+   space is tight. */
+.inputRow .hintButton,
+.inputRow .checkButton,
+.inputRow .continueButton {
+  flex: 0 0 auto;
+}
+
+/* The multi box fallback keeps its own row of buttons under the stacked boxes. */
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -427,12 +453,35 @@
   .input {
     padding: 9px 12px;
   }
-  .actions {
+  .inputRow {
     min-height: 0;
+    gap: 8px;
   }
   .checkButton,
   .continueButton {
-    padding: 10px 24px;
-    font-size: 1.05rem;
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+  .hintButton {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Portrait phone. The check button word is long, so at narrow widths the two
+   buttons are made smaller and the row gap tightened, which leaves the answer
+   box a usable width when Tipp and Ellenorzes flank it. */
+@media (max-width: 480px) {
+  .inputRow {
+    gap: 8px;
+  }
+  .hintButton {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  .checkButton,
+  .continueButton {
+    padding: 9px 14px;
+    font-size: 0.95rem;
   }
 }

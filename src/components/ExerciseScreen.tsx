@@ -250,79 +250,109 @@ export function ExerciseScreen({
               </p>
             )}
 
-            <div className={styles.fields}>
-              {current.fields.map((field) => {
+            {(() => {
+              const tippButton =
+                hints.length > 0 ? (
+                  <button type="button" className={styles.hintButton} onClick={openHint}>
+                    Tipp
+                  </button>
+                ) : null
+
+              const actionButton = currentCorrect ? (
+                !(isLast && isLastTask) ? (
+                  <button type="button" className={styles.continueButton} onClick={advance}>
+                    Tovább
+                  </button>
+                ) : null
+              ) : (
+                <button type="button" className={styles.checkButton} onClick={checkCurrent}>
+                  Ellenőrzés
+                </button>
+              )
+
+              const renderInput = (field: (typeof current.fields)[number]) => {
                 const state = fieldStates[field.id]
                 return (
-                  <div key={field.id} className={styles.field}>
+                  <div className={styles.inputWrap}>
+                    {/* The full keyboard, not the number keypad. A fraction answer needs a
+                        slash (3/5), which inputMode decimal does not offer on a phone. The
+                        tradeoff is that plain number answers now use the full keyboard too. */}
+                    <input
+                      id={field.id}
+                      className={styles.input}
+                      type="text"
+                      inputMode="text"
+                      autoComplete="off"
+                      value={state.value}
+                      readOnly={state.status === "correct"}
+                      data-state={state.status}
+                      onChange={(event) => setValue(field.id, event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault()
+                          checkCurrent()
+                        }
+                      }}
+                    />
+                    {flashes
+                      .filter((flash) => flash.fieldId === field.id)
+                      .map((flash) =>
+                        flash.kind === "correct" ? (
+                          <span key={flash.key} className={styles.fieldGain} aria-hidden="true">
+                            {coinMini}
+                            <span>+1</span>
+                          </span>
+                        ) : (
+                          <span key={flash.key} className={styles.fieldMiss} aria-hidden="true">
+                            ✕
+                          </span>
+                        ),
+                      )}
+                  </div>
+                )
+              }
+
+              // The common case: one answer box. The label sits on top and the row
+              // below is Tipp, the box, Ellenorzes, so on a phone both buttons stay
+              // beside the box and above the keyboard.
+              if (current.fields.length === 1) {
+                const field = current.fields[0]
+                return (
+                  <div className={styles.field}>
                     <label className={styles.label} htmlFor={field.id}>
                       <MathText text={field.label} />
                     </label>
-                    <div className={styles.inputWrap}>
-                      {/* The full keyboard, not the number keypad. A fraction answer needs a
-                          slash (3/5), which inputMode decimal does not offer on a phone. The
-                          tradeoff is that plain number answers now use the full keyboard too. */}
-                      <input
-                        id={field.id}
-                        className={styles.input}
-                        type="text"
-                        inputMode="text"
-                        autoComplete="off"
-                        value={state.value}
-                        readOnly={state.status === "correct"}
-                        data-state={state.status}
-                        onChange={(event) => setValue(field.id, event.target.value)}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            event.preventDefault()
-                            checkCurrent()
-                          }
-                        }}
-                      />
-                      {flashes
-                        .filter((flash) => flash.fieldId === field.id)
-                        .map((flash) =>
-                          flash.kind === "correct" ? (
-                            <span key={flash.key} className={styles.fieldGain} aria-hidden="true">
-                              {coinMini}
-                              <span>+1</span>
-                            </span>
-                          ) : (
-                            <span key={flash.key} className={styles.fieldMiss} aria-hidden="true">
-                              ✕
-                            </span>
-                          ),
-                        )}
+                    <div className={styles.inputRow}>
+                      {tippButton}
+                      {renderInput(field)}
+                      {actionButton}
                     </div>
                   </div>
                 )
-              })}
-            </div>
+              }
 
-          </section>
-
-          {/* Tipp and Ellenorzes share one row, directly under the answer box.
-              On a phone the on screen keyboard covers the lower part of the
-              screen, so keeping the check button up here, not in a row of its
-              own below, keeps it reachable while the keyboard is open. */}
-          <div className={styles.actions}>
-            {hints.length > 0 && (
-              <button type="button" className={styles.hintButton} onClick={openHint}>
-                Tipp
-              </button>
-            )}
-            {currentCorrect ? (
-              !(isLast && isLastTask) && (
-                <button type="button" className={styles.continueButton} onClick={advance}>
-                  Tovább
-                </button>
+              // The rare task with several boxes: keep them stacked, each with its
+              // own label, and put the buttons in a row underneath.
+              return (
+                <>
+                  <div className={styles.fields}>
+                    {current.fields.map((field) => (
+                      <div key={field.id} className={styles.field}>
+                        <label className={styles.label} htmlFor={field.id}>
+                          <MathText text={field.label} />
+                        </label>
+                        {renderInput(field)}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles.actions}>
+                    {tippButton}
+                    {actionButton}
+                  </div>
+                </>
               )
-            ) : (
-              <button type="button" className={styles.checkButton} onClick={checkCurrent}>
-                Ellenőrzés
-              </button>
-            )}
-          </div>
+            })()}
+          </section>
         </div>
       </div>
 
