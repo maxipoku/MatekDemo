@@ -127,13 +127,17 @@
   animation: fadeIn 200ms ease;
 }
 
-/* A phone held sideways. The picture window is short, so the vw sized caption
+/* iPhone held sideways. The picture window is short, so the vw sized caption
    reads oversized. Scale it to the short dimension and tighten its padding so
-   more lines of the narration stay in view at once. */
-@media (max-height: 540px) {
-  .captionInner {
-    padding: 12px clamp(16px, 5vw, 40px) 14px;
-    font-size: clamp(0.82rem, 3.6vh, 1.05rem);
-    line-height: 1.42;
+   more lines of the narration stay in view at once. Scoped to iOS the same way
+   as the cover title (see CoverScreen.module.css): @supports (-webkit-touch-callout)
+   plus the max-height gate means iPhone only, not Android or iPad. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-height: 540px) {
+    .captionInner {
+      padding: 12px clamp(16px, 5vw, 40px) 14px;
+      font-size: clamp(0.82rem, 3.6vh, 1.05rem);
+      line-height: 1.42;
+    }
   }
 }

@@ -94,19 +94,26 @@
   opacity: 0.5;
 }
 
-/* A phone held sideways (the demo's orientation on phones). The viewport is wide
+/* iPhone held sideways (the demo's orientation on phones). The viewport is wide
    but short, so the vw sized title turns oversized against the small height. Size
-   it to the short dimension instead and tighten the hero stack to match. */
-@media (max-height: 540px) {
-  .hero {
-    gap: 18px;
-    transform: translateY(-4vh);
-  }
-  .title {
-    font-size: clamp(2.2rem, 10vh, 3.4rem);
-  }
-  .startButton {
-    padding: 13px 38px;
-    font-size: 1.25rem;
+   it to the short dimension instead and tighten the hero stack to match.
+
+   Scoped to iOS on purpose: @supports (-webkit-touch-callout: none) is true only
+   on iPhone browsers (all use WebKit), and the max-height gate keeps iPad out
+   (its landscape height is well above 540px). Android and small desktop windows
+   keep the original sizing. To cover every phone, drop the @supports wrapper. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-height: 540px) {
+    .hero {
+      gap: 18px;
+      transform: translateY(-4vh);
+    }
+    .title {
+      font-size: clamp(2.2rem, 10vh, 3.4rem);
+    }
+    .startButton {
+      padding: 13px 38px;
+      font-size: 1.25rem;
+    }
   }
 }
