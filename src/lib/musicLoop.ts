@@ -28,6 +28,8 @@ const VOLUME_RAMP_SECONDS = 0.08
 // Resolution of the fade shape. 64 points is far finer than the ear needs.
 const CURVE_POINTS = 64
 
+import { getAudioContext } from "./audioContext"
+
 export type MusicPlayer = {
   start: (url: string, volume: number) => void
   setVolume: (volume: number) => void
@@ -130,37 +132,47 @@ export function createMusicPlayer(): MusicPlayer {
   async function begin(url: string, initialVolume: number) {
     volume = initialVolume
 
-    const Ctor =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext
-    if (!Ctor) {
+    // The context is shared with the narration, so this reuses the one already
+    // created (or creates it once). It is never closed here, see stop below.
+    const shared = getAudioContext()
+    if (!shared) {
       playFallback(url)
       return
     }
 
     try {
-      context = new Ctor()
+      context = shared
+      // The Kezdes tap is what permits sound at all, and this runs from it.
+      if (context.state === "suspended") await context.resume()
+
       master = context.createGain()
       master.gain.value = muted ? 0 : volume
       master.connect(context.destination)
-      // The Kezdes tap is what permits sound at all, and this runs from it.
-      if (context.state === "suspended") await context.resume()
 
       const response = await fetch(url)
       const bytes = await response.arrayBuffer()
       buffer = await context.decodeAudioData(bytes)
-      if (stopped) return
+      if (stopped) {
+        master.disconnect()
+        return
+      }
 
       nextStart = context.currentTime + 0.1
       tick()
       timer = window.setInterval(tick, SCHEDULE_INTERVAL_MS)
     } catch {
       // Anything at all went wrong (no decoder for this file, a blocked fetch,
-      // an old browser). Drop back to the plain looping element.
-      if (context) context.close().catch(() => {})
-      context = null
+      // an old browser). Drop back to the plain looping element. The shared
+      // context is left open for the narration.
+      if (master) {
+        try {
+          master.disconnect()
+        } catch {
+          // already gone
+        }
+      }
       master = null
+      context = null
       buffer = null
       playFallback(url)
     }
@@ -189,11 +201,17 @@ export function createMusicPlayer(): MusicPlayer {
         fallback.pause()
         fallback = null
       }
-      if (context) {
-        context.close().catch(() => {})
-        context = null
+      // Disconnect the music from the output, which silences it at once. The
+      // context itself stays open because the narration element runs on it too.
+      if (master) {
+        try {
+          master.disconnect()
+        } catch {
+          // already gone
+        }
+        master = null
       }
-      master = null
+      context = null
       buffer = null
     },
   }

@@ -11,6 +11,7 @@ import { FeedbackScreen, type FeedbackSource } from "./components/FeedbackScreen
 import { audioUrl, imageUrl } from "./lib/assets"
 import { SILENT_SOUND } from "./lib/audio"
 import { createMusicPlayer, type MusicPlayer } from "./lib/musicLoop"
+import { resumeAudioContext, connectElement } from "./lib/audioContext"
 import styles from "./App.module.css"
 
 // The volume the background music starts at (0 to 1). Kept very low so it sits
@@ -83,6 +84,13 @@ export function App() {
           .catch(() => {})
       }
     }
+
+    // Bring the shared audio context up on this tap, and route the narration
+    // element into it. Without this the narration plays muffled on iOS while the
+    // Web Audio music plays, and can stall so the story never advances. See
+    // lib/audioContext.ts.
+    resumeAudioContext()
+    if (narration) connectElement(narration)
 
     if (story.backgroundMusic) {
       // Stop any earlier run first, so starting twice cannot stack two tracks.
