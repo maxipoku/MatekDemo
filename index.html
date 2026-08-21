@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Matek demo</title>
+    <!-- Tag iPhones so the CSS can shrink the title and caption on those only. This runs in
+         the head, before first paint, so there is no flash of the large text. The user agent
+         is more reliable across iOS browsers than an @supports (-webkit-touch-callout) probe,
+         which was not applying on a real iPhone. iPad is left out on purpose (its user agent
+         reports as Macintosh on iPadOS 13+, and old iPads say iPad, neither matches iPhone). -->
+    <script>
+      if (/iPhone|iPod/.test(navigator.userAgent)) {
+        document.documentElement.classList.add("ios");
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
