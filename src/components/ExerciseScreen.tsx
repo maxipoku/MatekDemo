@@ -157,13 +157,6 @@ export function ExerciseScreen({
     }
   }
 
-  // Vissza: step back to the previous task in this screen. Its answer is still
-  // there (correct and locked), so the child can review or redo the path.
-  const goBack = () => {
-    setHintOpen(false)
-    setTaskIndex((value) => Math.max(value - 1, 0))
-  }
-
   const openHint = () => {
     if (hints.length === 0) return
     setHintLevels((prev) => ({ ...prev, [current.id]: Math.max(prev[current.id] ?? 0, 1) }))
@@ -306,17 +299,16 @@ export function ExerciseScreen({
               })}
             </div>
 
+          </section>
+
+          {/* Tipp and Ellenorzes share one row, directly under the answer box.
+              On a phone the on screen keyboard covers the lower part of the
+              screen, so keeping the check button up here, not in a row of its
+              own below, keeps it reachable while the keyboard is open. */}
+          <div className={styles.actions}>
             {hints.length > 0 && (
               <button type="button" className={styles.hintButton} onClick={openHint}>
                 Tipp
-              </button>
-            )}
-          </section>
-
-          <div className={styles.actions}>
-            {taskIndex > 0 && (
-              <button type="button" className={styles.backButton} onClick={goBack}>
-                Vissza
               </button>
             )}
             {currentCorrect ? (

@@ -277,17 +277,6 @@
   min-height: 60px;
 }
 
-.backButton {
-  padding: 14px 26px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
 .checkButton {
   padding: 14px 32px;
   font-size: 1.15rem;
@@ -441,7 +430,6 @@
   .actions {
     min-height: 0;
   }
-  .backButton,
   .checkButton,
   .continueButton {
     padding: 10px 24px;
