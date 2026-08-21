@@ -26,6 +26,17 @@
   box-sizing: border-box;
 }
 
+/* Stop iOS Safari from auto inflating text (its "text autosizing" feature). It
+   enlarges wide blocks of text, and more so in landscape, which was rendering the
+   narration caption far larger than its CSS size on an iPhone held sideways, on
+   top of and ignoring the clamp. 100% keeps the reader's own pinch to zoom working,
+   unlike none. This is the root cause of the oversized caption, separate from the
+   per component vmin sizing. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html,
 body,
 #root {

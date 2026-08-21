@@ -94,23 +94,26 @@
   opacity: 0.5;
 }
 
-/* iPhone held sideways (the demo's orientation on phones). The viewport is wide
-   but short, so the vw sized title turns oversized against the small height. Size
-   it to the short dimension instead and tighten the hero stack to match.
+/* iPhone, both orientations. The base title is sized in vw, so on the wide side of
+   the phone it balloons, and its clamp floor (2.8rem) still reads huge upright. Size
+   it to vmin instead, the shorter of the two viewport sides, which is about 390px on
+   an iPhone whether it is upright or sideways. So the title comes out the same
+   sensible size in both, and does not jump when the phone is rotated.
 
    Scoped to iPhone via the html.ios class that the script in index.html sets from
-   the user agent. That is more reliable across iOS browsers than an @supports
-   (-webkit-touch-callout) probe, which did not apply on a real iPhone. The
-   max-height gate keeps this to a phone held sideways (an iPhone in portrait is
-   about 844px tall, so it is left alone), and iPad never gets the ios class, so
-   Android, iPad and small desktop windows all keep the original sizing. */
+   the user agent (more reliable across iOS browsers than an @supports probe, which
+   did not apply on a real iPhone). iPad never gets the ios class, and Android and
+   desktop are untouched, so only iPhones are resized. */
+:global(html.ios) .title {
+  font-size: clamp(2rem, 8.5vmin, 2.9rem);
+}
+
+/* iPhone held sideways only: the height is short, so also tighten the hero stack and
+   the button so the title, the button and the image all fit without scrolling. */
 @media (max-height: 540px) {
   :global(html.ios) .hero {
     gap: 18px;
     transform: translateY(-4vh);
-  }
-  :global(html.ios) .title {
-    font-size: clamp(2.2rem, 10vh, 3.4rem);
   }
   :global(html.ios) .startButton {
     padding: 13px 38px;

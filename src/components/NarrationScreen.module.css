@@ -127,15 +127,20 @@
   animation: fadeIn 200ms ease;
 }
 
-/* iPhone held sideways. The picture window is short, so the vw sized caption
-   reads oversized. Scale it to the short dimension and tighten its padding so
-   more lines of the narration stay in view at once. Scoped to iPhone the same way
-   as the cover title (see CoverScreen.module.css): the html.ios class from
-   index.html plus the max-height gate means iPhone in landscape only. */
+/* iPhone, both orientations. Size the caption to vmin (the shorter viewport side,
+   about 390px on an iPhone either way up) so it reads the same upright or sideways
+   and smaller than the base size. Scoped to html.ios the same way as the cover
+   title (see CoverScreen.module.css), so only iPhones are affected. */
+:global(html.ios) .captionInner {
+  font-size: clamp(0.9rem, 3.7vmin, 1.15rem);
+  line-height: 1.45;
+}
+
+/* iPhone held sideways: the caption band is short, so tighten its vertical padding
+   to keep more lines of the narration in view at once. */
 @media (max-height: 540px) {
   :global(html.ios) .captionInner {
     padding: 12px clamp(16px, 5vw, 40px) 14px;
-    font-size: clamp(0.82rem, 3.6vh, 1.05rem);
     line-height: 1.42;
   }
 }
