@@ -282,6 +282,11 @@
   border-radius: 999px;
   cursor: pointer;
   animation: fadeIn 200ms ease;
+  /* So an <a> carrying this class (a task that links out) looks like the button. */
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Hint popup. It floats over everything, so opening a hint never changes the

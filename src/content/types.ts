@@ -34,6 +34,7 @@ export type Exercise = {
   prompt: string // the question, may contain math between $ signs
   fields: Field[] // one or more answer boxes
   hints?: string[] // optional, revealed one at a time (Tipp 1/3, 2/3, 3/3)
+  continueUrl?: string // if set, the Tovabb button on this task leaves the demo for this address instead of advancing
 }
 
 export type Field = {

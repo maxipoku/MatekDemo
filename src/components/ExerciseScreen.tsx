@@ -298,8 +298,14 @@ export function ExerciseScreen({
                   </button>
                 ) : null
 
+              // When the task carries a continueUrl, its Tovabb leaves the demo for
+              // that address (a full page navigation) instead of moving on.
               const actionButton = currentCorrect ? (
-                !(isLast && isLastTask) ? (
+                current.continueUrl ? (
+                  <a className={styles.continueButton} href={current.continueUrl}>
+                    Tovább
+                  </a>
+                ) : !(isLast && isLastTask) ? (
                   <button type="button" className={styles.continueButton} onClick={advance}>
                     Tovább
                   </button>
