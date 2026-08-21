@@ -15,7 +15,7 @@ import styles from "./App.module.css"
 
 // The volume the background music starts at (0 to 1). Kept very low so it sits
 // under the narration; the corner slider can change it live.
-const MUSIC_VOLUME = 0.05
+const MUSIC_VOLUME = 0.1
 // If a narration sound is missing or blocked, reveal Tovabb after this pause
 // so a missing file can never trap the child on a screen.
 const MISSING_AUDIO_REVEAL_MS = 1500
