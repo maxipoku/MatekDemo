@@ -266,11 +266,14 @@ export function ExerciseScreen({
                       <MathText text={field.label} />
                     </label>
                     <div className={styles.inputWrap}>
+                      {/* The full keyboard, not the number keypad. A fraction answer needs a
+                          slash (3/5), which inputMode decimal does not offer on a phone. The
+                          tradeoff is that plain number answers now use the full keyboard too. */}
                       <input
                         id={field.id}
                         className={styles.input}
                         type="text"
-                        inputMode="decimal"
+                        inputMode="text"
                         autoComplete="off"
                         value={state.value}
                         readOnly={state.status === "correct"}
