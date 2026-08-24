@@ -201,6 +201,13 @@ export function App() {
     }
   }, [started, index, screens])
 
+  // Silence the background music while the feedback questionnaire is open, and
+  // bring it back when the user returns to the story. Muting (not stopping) keeps
+  // the loop running so it resumes seamlessly on the way back.
+  useEffect(() => {
+    musicRef.current?.setMuted(showFeedback)
+  }, [showFeedback])
+
   // Tidy up the pending timer if the app goes away.
   useEffect(() => clearRevealTimer, [clearRevealTimer])
 
