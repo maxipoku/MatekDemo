@@ -3,7 +3,6 @@ import { story } from "./content/story"
 import { CoverScreen } from "./components/CoverScreen"
 import { NarrationScreen } from "./components/NarrationScreen"
 import { ExerciseScreen } from "./components/ExerciseScreen"
-import { MusicControls } from "./components/MusicControls"
 import { CoinTally } from "./components/CoinTally"
 import { ProgressBar } from "./components/ProgressBar"
 import { EndingScreen } from "./components/EndingScreen"
@@ -14,8 +13,8 @@ import { createMusicPlayer, type MusicPlayer } from "./lib/musicLoop"
 import { resumeAudioContext, connectElement } from "./lib/audioContext"
 import styles from "./App.module.css"
 
-// The volume the background music starts at (0 to 1). Kept very low so it sits
-// under the narration; the corner slider can change it live.
+// The background music volume (0 to 1). Fixed, kept very low so it sits under the
+// narration. There are no music controls: it simply plays at this level throughout.
 const MUSIC_VOLUME = 0.1
 // If a narration sound is missing or blocked, reveal Tovabb after this pause
 // so a missing file can never trap the child on a screen.
@@ -25,8 +24,6 @@ export function App() {
   const [started, setStarted] = useState(false)
   const [index, setIndex] = useState(0)
   const [canContinue, setCanContinue] = useState(false)
-  const [musicOn, setMusicOn] = useState(true)
-  const [musicVolume, setMusicVolume] = useState(MUSIC_VOLUME)
   // Developer mode: switched on from the cover screen. When on, extra buttons
   // appear to skip a narration or to fill an exercise with the right answers.
   const [devMode, setDevMode] = useState(false)
@@ -54,7 +51,6 @@ export function App() {
 
   const screens = story.screens
   const screen = screens[index]
-  const hasMusic = Boolean(story.backgroundMusic)
 
   const clearRevealTimer = useCallback(() => {
     if (revealTimerRef.current !== undefined) {
@@ -205,16 +201,6 @@ export function App() {
     }
   }, [started, index, screens])
 
-  // Keep the music muted or audible in step with the toggle.
-  useEffect(() => {
-    musicRef.current?.setMuted(!musicOn)
-  }, [musicOn])
-
-  // Keep the music volume in step with the slider.
-  useEffect(() => {
-    musicRef.current?.setVolume(musicVolume)
-  }, [musicVolume])
-
   // Tidy up the pending timer if the app goes away.
   useEffect(() => clearRevealTimer, [clearRevealTimer])
 
@@ -225,15 +211,6 @@ export function App() {
     <div className={styles.stage}>
       {started && !atEnding && !showFeedback && (
         <ProgressBar steps={screens.map((item) => item.type)} current={index} />
-      )}
-
-      {hasMusic && started && (
-        <MusicControls
-          on={musicOn}
-          onToggle={() => setMusicOn((value) => !value)}
-          volume={musicVolume}
-          onVolumeChange={setMusicVolume}
-        />
       )}
 
       {started && coins > 0 && !showFeedback && <CoinTally count={coins} awardId={award} />}
