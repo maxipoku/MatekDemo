@@ -431,6 +431,18 @@ export function ExerciseScreen({
         </div>
       )}
 
+      {/* Skip the current task without solving it: no coin and no green answer, just
+          move on. It reuses advance, so it goes to the next task, or leaves the screen
+          for the next narration or exercise when this is the last task in the block.
+          Shown only while the task is unsolved; once it is correct, Tovabb takes over
+          (and Tovabb is what honours a task's continueUrl, so skipping cannot bypass
+          the demo ending link). */}
+      {!currentCorrect && (
+        <button type="button" className={styles.skipButton} onClick={advance}>
+          Feladat átugrása
+        </button>
+      )}
+
       {devMode && (
         <button type="button" className="devButton" onClick={fillCorrect}>
           Kitöltés

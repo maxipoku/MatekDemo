@@ -289,6 +289,29 @@
   justify-content: center;
 }
 
+/* A quiet "skip this task" control parked in the bottom right corner, matching the
+   narration skip button. It is a plain button (dark, outlined) so it stays subordinate
+   to Ellenorzes and Tovabb, and sits above the card so it is always reachable. */
+.skipButton {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 6;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.skipButton:hover {
+  filter: brightness(1.15);
+}
+
 /* Hint popup. It floats over everything, so opening a hint never changes the
    height of the task or makes the screen scroll. */
 .hintOverlay {
@@ -429,6 +452,12 @@
     padding: 8px 14px;
     font-size: 0.95rem;
   }
+  .skipButton {
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
 }
 
 /* Portrait phone. The check button word is long, so at narrow widths the two
@@ -446,5 +475,11 @@
   .continueButton {
     padding: 9px 14px;
     font-size: 0.95rem;
+  }
+  .skipButton {
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
   }
 }
