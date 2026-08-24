@@ -179,6 +179,15 @@ export function NarrationScreen({
         )}
       </div>
 
+      {/* Always available, unlike Tovabb which waits for the narration to finish. A
+          child who does not want to hear the story out can jump straight to the next
+          block from the bottom right corner. */}
+      {!isLast && (
+        <button type="button" className={styles.skipButton} onClick={onContinue}>
+          Történet átugrása
+        </button>
+      )}
+
       {devMode && !isLast && (
         <button type="button" className="devButton" onClick={onContinue}>
           Átugrás
