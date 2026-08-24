@@ -16,7 +16,9 @@ type Props = {
   onBack: () => void
 }
 
-type Answers = Record<string, string | number>
+// A single answer is a string or number, except multi select (checkbox) questions,
+// which keep the chosen options as an array.
+type Answers = Record<string, string | number | string[]>
 
 // Submitting opens a prefilled email to this address (the user then sends it).
 // Change the address here if needed; it is visible in the built code, so a
@@ -30,22 +32,13 @@ const LABELS: Record<string, string> = {
   q2_device: "Milyen eszközön nézte",
   s_impression: "Milyen volt (pár szóban)",
   s_exciting: "Mennyire volt izgalmas a történet",
-  s_taskVsStory: "A feladat megszakította vagy a történet része volt",
-  s_clarity: "Egyértelmű volt, mit kell csinálni és hová írni",
-  s_clarityWhere: "Hol akadt el",
-  s_nextPart: "Megcsinálná a következő részt",
   s_bestWorst: "Legjobb és legunalmasabb rész",
-  s_anythingElse: "Bármi más",
-  s_nextTopic: "Miről látna szívesen történetet legközelebb",
-  p_gradeExam: "Hányadik osztályos, készül-e felvételire",
-  p_howPrepare: "Most hogyan készül",
-  p_alone: "Leülne ezzel egyedül",
+  s_frustrations: "Mitől tart leginkább a felvételiben",
+  s_media: "Milyen médiákat fogyaszt",
   p_useful: "Mennyire hasznos a felvételihez",
   p_usefulWhy: "Indoklás",
-  p_missing: "Mi hiányzik a használathoz",
-  p_pay: "Fizetne érte",
-  p_price: "Reális ár",
   p_recommend: "Ajánlaná másik szülőnek",
+  p_media: "Milyen médiákat fogyaszt",
   p_anythingElse: "Bármi más, kritika",
 }
 
@@ -55,22 +48,13 @@ const ORDER = [
   "q2_device",
   "s_impression",
   "s_exciting",
-  "s_taskVsStory",
-  "s_clarity",
-  "s_clarityWhere",
-  "s_nextPart",
   "s_bestWorst",
-  "s_anythingElse",
-  "s_nextTopic",
-  "p_gradeExam",
-  "p_howPrepare",
-  "p_alone",
+  "s_frustrations",
+  "s_media",
   "p_useful",
   "p_usefulWhy",
-  "p_missing",
-  "p_pay",
-  "p_price",
   "p_recommend",
+  "p_media",
   "p_anythingElse",
 ]
 
@@ -91,7 +75,7 @@ function Radio({
 }: {
   name: string
   options: string[]
-  value?: string | number
+  value?: string | number | string[]
   onChange: (v: string) => void
 }) {
   return (
@@ -99,6 +83,36 @@ function Radio({
       {options.map((opt) => (
         <label key={opt} className={styles.option}>
           <input type="radio" name={name} checked={value === opt} onChange={() => onChange(opt)} />
+          <span>{opt}</span>
+        </label>
+      ))}
+    </div>
+  )
+}
+
+// Like Radio, but several options can be picked at once. The chosen ones are kept
+// as an array in the answers.
+function CheckboxGroup({
+  name,
+  options,
+  values,
+  onToggle,
+}: {
+  name: string
+  options: string[]
+  values: string[]
+  onToggle: (option: string) => void
+}) {
+  return (
+    <div className={styles.options}>
+      {options.map((opt) => (
+        <label key={opt} className={styles.option}>
+          <input
+            type="checkbox"
+            name={name}
+            checked={values.includes(opt)}
+            onChange={() => onToggle(opt)}
+          />
           <span>{opt}</span>
         </label>
       ))}
@@ -116,7 +130,7 @@ function Scale({
   name: string
   min: number
   max: number
-  value?: string | number
+  value?: string | number | string[]
   onChange: (v: number) => void
 }) {
   const nums: number[] = []
@@ -145,11 +159,21 @@ export function FeedbackScreen({ source, onBack }: Props) {
   const set = (key: string, value: string | number) =>
     setAnswers((prev) => ({ ...prev, [key]: value }))
   const val = (key: string) => (answers[key] as string) ?? ""
+  // Multi select (checkbox) answers are kept as arrays. arr reads one, toggle flips
+  // a single option in it.
+  const arr = (key: string) => (Array.isArray(answers[key]) ? (answers[key] as string[]) : [])
+  const toggle = (key: string, option: string) =>
+    setAnswers((prev) => {
+      const current = Array.isArray(prev[key]) ? (prev[key] as string[]) : []
+      const next = current.includes(option)
+        ? current.filter((v) => v !== option)
+        : [...current, option]
+      return { ...prev, [key]: next }
+    })
 
   const role = answers.q1_role
   const isStudent = role === "Diák"
   const isParentTeacher = role === "Szülő" || role === "Tanár"
-  const stuck = answers.s_clarity === "Néha elakadtam" || answers.s_clarity === "Sokszor nem értettem"
 
   const submit = async () => {
     // Save the answers to our own serverless endpoint, which writes them to the
@@ -161,9 +185,30 @@ export function FeedbackScreen({ source, onBack }: Props) {
         ? "Forrás: a történet vége"
         : `Forrás: ${source.position}. képernyő / ${source.total} (${source.type})`
       : "Forrás: ismeretlen"
-    const lines = ORDER.filter(
-      (key) => answers[key] !== undefined && answers[key] !== "",
-    ).map((key) => `${LABELS[key]}: ${answers[key]}`)
+    // Only the answers that belong to the chosen role. The student (s_) and the
+    // parent/teacher (p_) blocks share the answers object, so if someone picks a
+    // role, fills something in, then switches, the earlier role's answers linger.
+    // Dropping them here keeps a submission to one role, and avoids two identically
+    // labelled lines (both media questions read "Milyen médiákat fogyaszt").
+    const belongsToRole = (key: string) => {
+      if (key.startsWith("s_")) return isStudent
+      if (key.startsWith("p_")) return isParentTeacher
+      return true
+    }
+    const relevant: Answers = {}
+    for (const key of Object.keys(answers)) {
+      if (belongsToRole(key)) relevant[key] = answers[key]
+    }
+    const lines = ORDER.filter((key) => {
+      if (!belongsToRole(key)) return false
+      const value = relevant[key]
+      if (value === undefined || value === "") return false
+      if (Array.isArray(value) && value.length === 0) return false
+      return true
+    }).map((key) => {
+      const value = relevant[key]
+      return `${LABELS[key]}: ${Array.isArray(value) ? value.join(", ") : value}`
+    })
     const body = [sourceLine, "", ...lines].join("\n")
     const mailto = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
       FEEDBACK_SUBJECT,
@@ -174,7 +219,7 @@ export function FeedbackScreen({ source, onBack }: Props) {
       const response = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers, source }),
+        body: JSON.stringify({ answers: relevant, source }),
       })
       if (!response.ok) throw new Error(`save failed: ${response.status}`)
       setStatus("done")
@@ -303,44 +348,6 @@ export function FeedbackScreen({ source, onBack }: Props) {
               />
             </Field>
 
-            <Field label="A feladat inkább megszakította a történetet, vagy a történet része volt?">
-              <Radio
-                name="s_taskVsStory"
-                options={["Megszakította", "A része volt", "Nem vagyok biztos benne"]}
-                value={answers.s_taskVsStory}
-                onChange={(v) => set("s_taskVsStory", v)}
-              />
-            </Field>
-
-            <Field label="Mindig egyértelmű volt, hogy mit kell csinálnod és hová kell írnod a választ?">
-              <Radio
-                name="s_clarity"
-                options={["Végig", "Néha elakadtam", "Sokszor nem értettem"]}
-                value={answers.s_clarity}
-                onChange={(v) => set("s_clarity", v)}
-              />
-            </Field>
-
-            {stuck && (
-              <Field label="Hol akadtál el?">
-                <textarea
-                  className={styles.textarea}
-                  rows={2}
-                  value={val("s_clarityWhere")}
-                  onChange={(e) => set("s_clarityWhere", e.target.value)}
-                />
-              </Field>
-            )}
-
-            <Field label="Ha holnap kijönne a következő rész, megcsinálnád?">
-              <Radio
-                name="s_nextPart"
-                options={["Igen, azonnal", "Talán", "Nem"]}
-                value={answers.s_nextPart}
-                onChange={(v) => set("s_nextPart", v)}
-              />
-            </Field>
-
             <Field label="Mi volt a legjobb és mi volt a legunalmasabb rész?">
               <textarea
                 className={styles.textarea}
@@ -350,21 +357,21 @@ export function FeedbackScreen({ source, onBack }: Props) {
               />
             </Field>
 
-            <Field label="Bármi más, ami eszedbe jut?">
+            <Field label="Mitől tartasz leginkább a felvételiben?">
               <textarea
                 className={styles.textarea}
-                rows={2}
-                value={val("s_anythingElse")}
-                onChange={(e) => set("s_anythingElse", e.target.value)}
+                rows={3}
+                value={val("s_frustrations")}
+                onChange={(e) => set("s_frustrations", e.target.value)}
               />
             </Field>
 
-            <Field label="Miről látnál szívesen történetet legközelebb?">
-              <textarea
-                className={styles.textarea}
-                rows={2}
-                value={val("s_nextTopic")}
-                onChange={(e) => set("s_nextTopic", e.target.value)}
+            <Field label="Milyen médiákat fogyasztasz?">
+              <CheckboxGroup
+                name="s_media"
+                options={["TikTok", "Instagram", "YouTube", "Újságok", "TV"]}
+                values={arr("s_media")}
+                onToggle={(opt) => toggle("s_media", opt)}
               />
             </Field>
           </>
@@ -372,33 +379,6 @@ export function FeedbackScreen({ source, onBack }: Props) {
 
         {isParentTeacher && (
           <>
-            <Field label="Hányadik osztályos a gyereked, és készül-e felvételire?">
-              <textarea
-                className={styles.textarea}
-                rows={2}
-                value={val("p_gradeExam")}
-                onChange={(e) => set("p_gradeExam", e.target.value)}
-              />
-            </Field>
-
-            <Field label="Most hogyan készül?">
-              <Radio
-                name="p_howPrepare"
-                options={["Magántanár", "Szakkör", "Munkafüzet otthon", "Veled együtt", "Egyelőre sehogy"]}
-                value={answers.p_howPrepare}
-                onChange={(v) => set("p_howPrepare", v)}
-              />
-            </Field>
-
-            <Field label="A gyereked leülne ezzel egyedül?">
-              <Radio
-                name="p_alone"
-                options={["Igen", "Csak ha mellette ülök", "Nem"]}
-                value={answers.p_alone}
-                onChange={(v) => set("p_alone", v)}
-              />
-            </Field>
-
             <Field label="Mennyire tartod hasznosnak a felvételire készüléshez?">
               <Scale
                 name="p_useful"
@@ -416,33 +396,6 @@ export function FeedbackScreen({ source, onBack }: Props) {
               />
             </Field>
 
-            <Field label="Mi hiányzik ahhoz, hogy tényleg használnátok?">
-              <textarea
-                className={styles.textarea}
-                rows={3}
-                value={val("p_missing")}
-                onChange={(e) => set("p_missing", e.target.value)}
-              />
-            </Field>
-
-            <Field label="Ha mind a tíz rész elkészülne, fizetnél érte?">
-              <Radio
-                name="p_pay"
-                options={["Igen", "Talán", "Nem"]}
-                value={answers.p_pay}
-                onChange={(v) => set("p_pay", v)}
-              />
-              {answers.p_pay === "Igen" && (
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Mennyi lenne szerinted reális ár?"
-                  value={val("p_price")}
-                  onChange={(e) => set("p_price", e.target.value)}
-                />
-              )}
-            </Field>
-
             <Field label="Ajánlanád egy másik szülőnek? (0 = biztosan nem, 10 = biztosan igen)">
               <Scale
                 name="p_recommend"
@@ -450,6 +403,15 @@ export function FeedbackScreen({ source, onBack }: Props) {
                 max={10}
                 value={answers.p_recommend}
                 onChange={(v) => set("p_recommend", v)}
+              />
+            </Field>
+
+            <Field label="Milyen médiákat fogyasztasz?">
+              <CheckboxGroup
+                name="p_media"
+                options={["TikTok", "Instagram", "YouTube", "Újságok", "TV"]}
+                values={arr("p_media")}
+                onToggle={(opt) => toggle("p_media", opt)}
               />
             </Field>
 
