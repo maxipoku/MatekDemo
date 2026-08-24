@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { ReactNode } from "react"
 import styles from "./FeedbackScreen.module.css"
 
@@ -25,6 +25,22 @@ type Answers = Record<string, string | number | string[]>
 // dedicated inbox is fine.
 const FEEDBACK_EMAIL = "thesolydstore@gmail.com"
 const FEEDBACK_SUBJECT = "Matek demo visszajelzés"
+
+// The half filled form is kept here for the browser session, so an accidental
+// Vissza (which unmounts this screen) does not throw away what was typed. It is
+// restored when the questionnaire is opened again and cleared once a submission
+// saves. sessionStorage, not localStorage, so it lives only for this tab.
+const STORAGE_KEY = "matek_feedback_answers"
+
+function loadAnswers(): Answers {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (raw) return JSON.parse(raw) as Answers
+  } catch {
+    // Private mode or corrupt value: start empty, no harm done.
+  }
+  return {}
+}
 
 // Readable labels for the email body.
 const LABELS: Record<string, string> = {
@@ -148,7 +164,7 @@ function Scale({
 }
 
 export function FeedbackScreen({ source, onBack }: Props) {
-  const [answers, setAnswers] = useState<Answers>({})
+  const [answers, setAnswers] = useState<Answers>(loadAnswers)
   // form: filling in. sending: saving to the server. done: saved. fallback: the
   // save failed, so we show the copy or email screen so feedback is never lost.
   const [status, setStatus] = useState<"form" | "sending" | "done" | "fallback">("form")
@@ -170,6 +186,16 @@ export function FeedbackScreen({ source, onBack }: Props) {
         : [...current, option]
       return { ...prev, [key]: next }
     })
+
+  // Keep the session copy in step with what has been filled in, so it survives an
+  // accidental Vissza and is there when the form is reopened.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(answers))
+    } catch {
+      // Storing is best effort; losing it only means the form does not persist.
+    }
+  }, [answers])
 
   const role = answers.q1_role
   const isStudent = role === "Diák"
@@ -222,6 +248,12 @@ export function FeedbackScreen({ source, onBack }: Props) {
         body: JSON.stringify({ answers: relevant, source }),
       })
       if (!response.ok) throw new Error(`save failed: ${response.status}`)
+      // Saved, so the kept copy is no longer needed. A later open starts fresh.
+      try {
+        sessionStorage.removeItem(STORAGE_KEY)
+      } catch {
+        // Nothing to do if the store is unavailable.
+      }
       setStatus("done")
     } catch {
       setResult({ body, mailto })
