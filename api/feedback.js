@@ -4,9 +4,12 @@
 // API. The service role key is read from an environment variable and never
 // leaves the server, so the browser only ever talks to our own site.
 //
-// Configure two environment variables in the Vercel project settings:
-//   SUPABASE_URL                 e.g. https://xxxxxxxx.supabase.co
-//   SUPABASE_SERVICE_ROLE_KEY    the service_role key (secret, server only)
+// Configure two environment variables in the Vercel project settings. The MATEK_
+// prefixed names are preferred, so this can share a Vercel scope with another
+// Supabase app (for example the kalandmatek site) whose variables are named
+// plainly, without a name clash. The plain names still work as a fallback.
+//   MATEK_SUPABASE_URL                 e.g. https://xxxxxxxx.supabase.co
+//   MATEK_SUPABASE_SERVICE_ROLE_KEY    the service_role key (secret, server only)
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -14,10 +17,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" })
   }
 
-  const url = process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const url = process.env.MATEK_SUPABASE_URL || process.env.SUPABASE_URL
+  const key = process.env.MATEK_SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) {
-    console.error("Feedback not configured: missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY")
+    console.error(
+      "Feedback not configured: missing MATEK_SUPABASE_URL or MATEK_SUPABASE_SERVICE_ROLE_KEY",
+    )
     return res.status(500).json({ error: "Server not configured" })
   }
 
