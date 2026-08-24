@@ -183,38 +183,12 @@
   line-height: 1.5;
 }
 
-.doneActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
-.openMail {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  padding: 12px 22px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.summary {
-  width: 100%;
-  font-family: inherit;
+/* Shown under the form when a submission fails, so the user knows to try again. */
+.error {
+  margin: 0;
   font-size: 0.95rem;
-  line-height: 1.45;
-  padding: 12px;
-  border-radius: 10px;
-  border: 2px solid var(--inputBorder);
-  background: var(--inputBg);
-  color: var(--inputText);
-  resize: vertical;
-  text-align: left;
+  font-weight: 600;
+  color: var(--incorrectBorder);
+  text-align: center;
+  line-height: 1.4;
 }
