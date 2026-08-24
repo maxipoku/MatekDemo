@@ -51,9 +51,6 @@ export const story: Story = {
             "Rendezd növekvő sorrendbe mind az öt számot.",
             "Öt szám esetén a középső a harmadik a rendezett sorban, nem az, amelyik eredetileg középen állt.",
           ],
-          // A correct answer here ends the demo: the Tovabb button leaves for the
-          // thank you page on the main site instead of moving to the next task.
-          continueUrl: "https://kalandmatek.hu/koszonjuk",
         },
         {
           id: "tarcsa2",
