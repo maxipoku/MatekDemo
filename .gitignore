@@ -12,3 +12,6 @@ Thumbs.db
 
 # Confidential working notes. Stays on this computer, never upload it.
 journal.md
+
+.vercel
+.env*
