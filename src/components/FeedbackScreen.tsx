@@ -206,9 +206,9 @@ export function FeedbackScreen({ source, onBack }: Props) {
           <p className={styles.doneNote}>
             A visszajelzésed megérkezett. Sokat segítesz vele a fejlesztésben.
           </p>
-          <button type="button" className={styles.back} onClick={onBack}>
-            Vissza
-          </button>
+          <a className={styles.doneLink} href="https://www.kalandmatek.hu/ingyenes">
+            További ajándékok
+          </a>
         </div>
       </div>
     )

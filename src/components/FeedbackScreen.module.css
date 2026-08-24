@@ -183,6 +183,21 @@
   line-height: 1.5;
 }
 
+/* Yellow pill link on the thank you screen, sending the user on to the free
+   gifts page. Styled like the submit button, but it is a real link. */
+.doneLink {
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accentText);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 /* Shown under the form when a submission fails, so the user knows to try again. */
 .error {
   margin: 0;
