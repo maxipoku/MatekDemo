@@ -256,6 +256,7 @@ export function App() {
               onImageReady={handleNarrationImageReady}
               onContinue={goNext}
               onReplay={handleReplay}
+              onBack={index > 0 ? goBack : undefined}
             />
           ) : (
             <ExerciseScreen

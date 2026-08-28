@@ -311,21 +311,6 @@ export function ExerciseScreen({
                   </button>
                 ) : null
 
-              const backButton = (
-                <button type="button" className={styles.backButton} onClick={goBack}>
-                  Vissza
-                </button>
-              )
-
-              // Tipp and Vissza share one slot beside the box, stacked, so adding
-              // Vissza never widens the row or shifts the box and action button.
-              const sideControls = (
-                <div className={styles.sideControls}>
-                  {tippButton}
-                  {backButton}
-                </div>
-              )
-
               // When the task carries a continueUrl, its Tovabb leaves the demo for
               // that address (a full page navigation) instead of moving on.
               const actionButton = currentCorrect ? (
@@ -391,7 +376,7 @@ export function ExerciseScreen({
                       <MathText text={field.label} />
                     </label>
                     <div className={styles.inputRow}>
-                      {sideControls}
+                      {tippButton}
                       {renderInput(field)}
                       {actionButton}
                     </div>
@@ -414,7 +399,7 @@ export function ExerciseScreen({
                     ))}
                   </div>
                   <div className={styles.actions}>
-                    {sideControls}
+                    {tippButton}
                     {actionButton}
                   </div>
                 </>
@@ -470,6 +455,13 @@ export function ExerciseScreen({
           Feladat átugrása
         </button>
       )}
+
+      {/* Go back, mirroring the skip button but parked in the bottom left corner. It
+          steps back a task within this exercise, or leaves for the previous screen
+          from the first task. */}
+      <button type="button" className={styles.backButton} onClick={goBack}>
+        Vissza
+      </button>
 
       {devMode && (
         <button type="button" className="devButton" onClick={fillCorrect}>

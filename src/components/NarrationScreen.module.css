@@ -134,6 +134,28 @@
   filter: brightness(1.15);
 }
 
+/* Vissza mirrors the skip button in the opposite (bottom left) corner: the same
+   quiet dark, outlined look, above the caption overlay so it is always clickable. */
+.backButton {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 5;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.backButton:hover {
+  filter: brightness(1.15);
+}
+
 @media (max-width: 480px) {
   .replayButton,
   .continueButton {
@@ -142,6 +164,12 @@
   }
   .skipButton {
     right: 12px;
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  .backButton {
+    left: 12px;
     bottom: 12px;
     padding: 8px 14px;
     font-size: 0.85rem;

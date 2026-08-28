@@ -21,6 +21,9 @@ type Props = {
   onImageReady: () => void
   onContinue: () => void
   onReplay: () => void
+  // Go back to the previous screen. Left out on the very first screen, where there
+  // is nowhere to go back to, and the Vissza button is then not shown.
+  onBack?: () => void
 }
 
 export function NarrationScreen({
@@ -32,6 +35,7 @@ export function NarrationScreen({
   onImageReady,
   onContinue,
   onReplay,
+  onBack,
 }: Props) {
   const [failed, setFailed] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -185,6 +189,14 @@ export function NarrationScreen({
       {!isLast && (
         <button type="button" className={styles.skipButton} onClick={onContinue}>
           Történet átugrása
+        </button>
+      )}
+
+      {/* Go back, mirroring the skip button in the bottom left corner. Only shown when
+          there is a previous screen (so not on the first one). */}
+      {onBack && (
+        <button type="button" className={styles.backButton} onClick={onBack}>
+          Vissza
         </button>
       )}
 

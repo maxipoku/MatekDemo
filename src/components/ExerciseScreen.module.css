@@ -227,34 +227,6 @@
   cursor: pointer;
 }
 
-/* Vissza sits with Tipp. Same quiet outline shape, but neutral text so Tipp keeps
-   the eye. */
-.backButton {
-  padding: 9px 18px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-/* Tipp and Vissza share one slot beside the answer box, stacked. The slot keeps a
-   single button's width, so adding Vissza does not push the box or the action
-   button out of place. */
-.sideControls {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sideControls .hintButton,
-.sideControls .backButton {
-  align-self: stretch;
-}
-
 .inputRow {
   display: flex;
   flex-wrap: nowrap;
@@ -272,9 +244,9 @@
   flex: 1 1 auto;
 }
 
-/* The side controls (Tipp, Vissza) and the check button keep their size, so the
-   box is what gives way when space is tight. */
-.inputRow .sideControls,
+/* Tipp and the check button keep their size, so the box is what gives way when
+   space is tight. */
+.inputRow .hintButton,
 .inputRow .checkButton,
 .inputRow .continueButton {
   flex: 0 0 auto;
@@ -338,6 +310,28 @@
 }
 
 .skipButton:hover {
+  filter: brightness(1.15);
+}
+
+/* Vissza mirrors the skip button in the opposite (bottom left) corner: the same
+   quiet dark, outlined look, sitting above the card so it is always reachable. */
+.backButton {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 6;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.backButton:hover {
   filter: brightness(1.15);
 }
 
@@ -472,21 +466,23 @@
     min-height: 0;
     gap: 8px;
   }
-  .sideControls {
-    gap: 6px;
-  }
   .checkButton,
   .continueButton {
     padding: 10px 18px;
     font-size: 1rem;
   }
-  .hintButton,
-  .backButton {
+  .hintButton {
     padding: 8px 14px;
     font-size: 0.95rem;
   }
   .skipButton {
     right: 12px;
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  .backButton {
+    left: 12px;
     bottom: 12px;
     padding: 8px 14px;
     font-size: 0.85rem;
@@ -500,11 +496,7 @@
   .inputRow {
     gap: 8px;
   }
-  .sideControls {
-    gap: 6px;
-  }
-  .hintButton,
-  .backButton {
+  .hintButton {
     padding: 8px 12px;
     font-size: 0.9rem;
   }
@@ -515,6 +507,12 @@
   }
   .skipButton {
     right: 12px;
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  .backButton {
+    left: 12px;
     bottom: 12px;
     padding: 8px 14px;
     font-size: 0.85rem;
