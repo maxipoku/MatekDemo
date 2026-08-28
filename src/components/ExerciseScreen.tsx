@@ -10,6 +10,7 @@ type Props = {
   isLast: boolean
   devMode: boolean
   onContinue: () => void
+  onBack: () => void
   onReward: (amount: number) => void
   formatRule?: string
 }
@@ -30,6 +31,7 @@ export function ExerciseScreen({
   isLast,
   devMode,
   onContinue,
+  onBack,
   onReward,
   formatRule,
 }: Props) {
@@ -197,6 +199,17 @@ export function ExerciseScreen({
     }
   }
 
+  // Vissza: step back a task within this exercise if there is one, otherwise leave
+  // the screen for the previous one. It is the exact reverse of the forward path.
+  const goBack = () => {
+    setHintOpen(false)
+    if (taskIndex > 0) {
+      setTaskIndex((value) => Math.max(value - 1, 0))
+    } else {
+      onBack()
+    }
+  }
+
   const openHint = () => {
     if (hints.length === 0) return
     setHintLevels((prev) => ({ ...prev, [current.id]: Math.max(prev[current.id] ?? 0, 1) }))
@@ -298,6 +311,21 @@ export function ExerciseScreen({
                   </button>
                 ) : null
 
+              const backButton = (
+                <button type="button" className={styles.backButton} onClick={goBack}>
+                  Vissza
+                </button>
+              )
+
+              // Tipp and Vissza share one slot beside the box, stacked, so adding
+              // Vissza never widens the row or shifts the box and action button.
+              const sideControls = (
+                <div className={styles.sideControls}>
+                  {tippButton}
+                  {backButton}
+                </div>
+              )
+
               // When the task carries a continueUrl, its Tovabb leaves the demo for
               // that address (a full page navigation) instead of moving on.
               const actionButton = currentCorrect ? (
@@ -363,7 +391,7 @@ export function ExerciseScreen({
                       <MathText text={field.label} />
                     </label>
                     <div className={styles.inputRow}>
-                      {tippButton}
+                      {sideControls}
                       {renderInput(field)}
                       {actionButton}
                     </div>
@@ -386,7 +414,7 @@ export function ExerciseScreen({
                     ))}
                   </div>
                   <div className={styles.actions}>
-                    {tippButton}
+                    {sideControls}
                     {actionButton}
                   </div>
                 </>

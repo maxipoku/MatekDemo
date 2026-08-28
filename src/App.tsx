@@ -158,6 +158,17 @@ export function App() {
     }
   }, [clearRevealTimer, index, screens.length])
 
+  // Step back to the previous screen. Used by the Vissza button on exercises when
+  // there is no earlier task left to go back to within the exercise.
+  const goBack = useCallback(() => {
+    clearRevealTimer()
+    expectingEndRef.current = false
+    const narration = narrationRef.current
+    if (narration) narration.pause()
+    setCanContinue(false)
+    setIndex((value) => Math.max(0, value - 1))
+  }, [clearRevealTimer])
+
   // Award treasure when an answer is correct. Bumps the total and remembers the
   // size of the gain (a two box task can give two) so the tally can show a plus.
   const addCoins = useCallback((amount: number) => {
@@ -252,6 +263,7 @@ export function App() {
               isLast={false}
               devMode={devMode}
               onContinue={goNext}
+              onBack={goBack}
               onReward={addCoins}
               formatRule={story.answerFormatRule}
             />

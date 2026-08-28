@@ -219,11 +219,40 @@
   padding: 9px 18px;
   font-size: 1rem;
   font-weight: 600;
+  /* Yellow text, so Tipp reads as the helpful, inviting control. */
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Vissza sits with Tipp. Same quiet outline shape, but neutral text so Tipp keeps
+   the eye. */
+.backButton {
+  padding: 9px 18px;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--text);
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   cursor: pointer;
+}
+
+/* Tipp and Vissza share one slot beside the answer box, stacked. The slot keeps a
+   single button's width, so adding Vissza does not push the box or the action
+   button out of place. */
+.sideControls {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sideControls .hintButton,
+.sideControls .backButton {
+  align-self: stretch;
 }
 
 .inputRow {
@@ -243,9 +272,9 @@
   flex: 1 1 auto;
 }
 
-/* Tipp and the check button keep their size, so the box is what gives way when
-   space is tight. */
-.inputRow .hintButton,
+/* The side controls (Tipp, Vissza) and the check button keep their size, so the
+   box is what gives way when space is tight. */
+.inputRow .sideControls,
 .inputRow .checkButton,
 .inputRow .continueButton {
   flex: 0 0 auto;
@@ -443,12 +472,16 @@
     min-height: 0;
     gap: 8px;
   }
+  .sideControls {
+    gap: 6px;
+  }
   .checkButton,
   .continueButton {
     padding: 10px 18px;
     font-size: 1rem;
   }
-  .hintButton {
+  .hintButton,
+  .backButton {
     padding: 8px 14px;
     font-size: 0.95rem;
   }
@@ -467,7 +500,11 @@
   .inputRow {
     gap: 8px;
   }
-  .hintButton {
+  .sideControls {
+    gap: 6px;
+  }
+  .hintButton,
+  .backButton {
     padding: 8px 12px;
     font-size: 0.9rem;
   }
