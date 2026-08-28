@@ -24,9 +24,10 @@ export function App() {
   const [started, setStarted] = useState(false)
   const [index, setIndex] = useState(0)
   const [canContinue, setCanContinue] = useState(false)
-  // Developer mode: switched on from the cover screen. When on, extra buttons
-  // appear to skip a narration or to fill an exercise with the right answers.
-  const [devMode, setDevMode] = useState(false)
+  // Developer mode is off and there is no UI to switch it on, so the helper
+  // buttons (skip a narration, fill an exercise with the right answers) never
+  // appear during the demo. Set this to true in code if you ever need them back.
+  const devMode = false
   // Treasure collected: one gold coin per correct answer, growing across the
   // whole story. The award holds the latest gain so the tally can show a plus.
   const [coins, setCoins] = useState(0)
@@ -229,12 +230,7 @@ export function App() {
       )}
 
       {!started && (
-        <CoverScreen
-          coverImage={story.coverImage}
-          onStart={handleStart}
-          devMode={devMode}
-          onToggleDevMode={() => setDevMode((value) => !value)}
-        />
+        <CoverScreen coverImage={story.coverImage} onStart={handleStart} />
       )}
 
       {started && !atEnding && !showFeedback && screen && (

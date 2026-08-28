@@ -72,28 +72,6 @@
   transform: translateY(1px);
 }
 
-/* The developer mode toggle is kept nearly invisible on the cover so anyone who
-   gets the demo does not stumble into developer mode. It still works: it sits in
-   the bottom left corner, and on a mouse a hover brings it up enough to click. */
-.devToggle {
-  position: fixed;
-  left: 6px;
-  bottom: 6px;
-  z-index: 50;
-  padding: 4px 8px;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.62rem;
-  opacity: 0.05;
-  cursor: default;
-}
-
-.devToggle:hover {
-  opacity: 0.5;
-}
-
 /* iPhone, both orientations. The base title is sized in vw, so on the wide side of
    the phone it balloons, and its clamp floor (2.8rem) still reads huge upright. Size
    it to vmin instead, the shorter of the two viewport sides, which is about 390px on

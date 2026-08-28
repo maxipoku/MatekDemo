@@ -5,11 +5,9 @@ import styles from "./CoverScreen.module.css"
 type Props = {
   coverImage: string
   onStart: () => void
-  devMode: boolean
-  onToggleDevMode: () => void
 }
 
-export function CoverScreen({ coverImage, onStart, devMode, onToggleDevMode }: Props) {
+export function CoverScreen({ coverImage, onStart }: Props) {
   const [failed, setFailed] = useState(false)
 
   return (
@@ -29,16 +27,6 @@ export function CoverScreen({ coverImage, onStart, devMode, onToggleDevMode }: P
           Kezdés
         </button>
       </div>
-      <button
-        type="button"
-        className={styles.devToggle}
-        onClick={onToggleDevMode}
-        aria-pressed={devMode}
-        aria-label="Fejlesztői mód"
-        tabIndex={-1}
-      >
-        Fejlesztői mód: {devMode ? "be" : "ki"}
-      </button>
     </div>
   )
 }
